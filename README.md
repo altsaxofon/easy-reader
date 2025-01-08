@@ -6,20 +6,20 @@ An audio book player for the visually impaired
 ## Parts list
 
 **Raspberry Pi Zero**<br/>
-Raspberry pi Zero<br/>
-micro SD to SD extension cable<br/>
-micro usb power adapter<br/>
+[Raspberry pi Zero](https://www.aliexpress.com/item/1005008224603338.html)<br/>
+[micro SD to SD extension cable](https://www.amazon.se/dp/B0C4L7DDZF)<br/>
+Micro usb power adapter <br/>
 
 **Audio playback**<br/>
-USB audio card<br/>
-USB-A to micro USB adapter<br/>
-Small 5v amplifier<br/>
+[USB audio card](https://www.amazon.se/dp/B00IRVQ0F8)<br/>
+USB-A to micro USB adapter <br/>
+[Small 5v amplifier](https://www.aliexpress.com/item/1005005852252380.html)<br/>
 2x 3w 4ohm Speakers<br/>
 
 **UI**<br/>
-2x Smaller momentary push buttons (direction buttons)<br/>
-1x Big led-illuminated arcade style button<br/>
-Rocker switch On-on 2-position<br/>
+[2x Smaller momentary push buttons](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)<br/>
+[1x Big led-illuminated arcade style button](https://www.aliexpress.com/item/1005007297493475.html)<br/>
+[Rocker switch On-on 2-position](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)<br/>
 
 
 
