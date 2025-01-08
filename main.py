@@ -42,9 +42,10 @@ LED_PIN = 18
 SWITCH_PIN_A = 23
 
 # Initialize hardware
-button_play = Button(PLAY_BUTTON_PIN, pull_up=True, bounce_time=0.03)  # Create a Button object for GPIO 17
-button_next = Button(NEXT_BUTTON_PIN, pull_up=True, bounce_time=0.03)  # Create a Button object for GPIO 17
-button_prev = Button(PREV_BUTTON_PIN, pull_up=True, bounce_time=0.03)  # Create a Button object for GPIO 17
+
+button_play = Button(PLAY_BUTTON_PIN, pull_up=True, bounce_time=0.03)  
+button_next = Button(NEXT_BUTTON_PIN, pull_up=True, bounce_time=0.03) 
+button_prev = Button(PREV_BUTTON_PIN, pull_up=True, bounce_time=0.03) 
 
 switch_a = DigitalInputDevice(SWITCH_PIN_A, pull_up=True, bounce_time=0.5)
 
@@ -52,12 +53,11 @@ button_led = LED(LED_PIN)  # Create an LED object for GPIO 18
 
 # Initialize hardware callbacks
 
-# Main function to handle button press
 def button_play_callback():
     global settings_mode
     if settings_mode:
         settings_mode = False
-    play_pause()  # You can link this to your play/pause function
+    play_pause() 
 
 def button_next_callback():
     arrow_key_pushed(1)
@@ -77,10 +77,7 @@ button_prev.when_pressed = button_prev_callback
 switch_a.when_activated = switch_callback
 switch_a.when_deactivated = switch_callback
 
-
 mixer.init()
-
-
 
 # Helper functions
 
