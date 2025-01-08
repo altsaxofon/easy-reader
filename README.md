@@ -53,11 +53,13 @@ During playback the progress will be coninuasly saved to a text file on the SD c
 When an audiobook is finished the progress of the book will be reset and the playback will stop. The title of next audiobook on the SD-card will be read out loud by the speech synthesis, informing the user to push the play button to begin to listen to it.  
 
 ### Settings mode
-Using the book/chapter switch or an or button will pause the music and set the player in "settings mode".
+Using the book/chapter switch or a directional button will pause the music and set the player in "settings mode".
 Depending on the state of the book/chapter switch the current book title or chapter will be read out loud by the speech synthesis. 
 
-While in settings mode, using the arrow buttons will change book title or chapter. This change will immedatly be stored to the memory. 
+While in settings mode, using the arrow buttons will change book title or chapter. This change will immedatly be stored to the memory and the selection will be read out load by the speech synthesis.
 
 Settings mode is exited by pushing the play button, wich resumes playback from the newly selected book or chapter. 
 
-Changing books will not reset book progress. 
+Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
+
+
