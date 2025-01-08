@@ -1,32 +1,14 @@
-#sudo python3 EasyReader_pi/main.py
-# source easyreader_ve/bin/activate
-# sudo -E  python3 /home/admin/easyreader/main.py
+#!/usr/bin/env python
 
-# Activate the virtual environment and run the app
-#su - pi -c 'source easyreader_ve/bin/activate && python3 /home/admin/easyreader/main.py'
+"""main.py: Easy reader application."""
 
-
-# This is how to create a virtual environment with the necessary packages:
-# python -m venv --system-site-packages env 
-
-# This is how to activat / deactivate the virtual environment:
-# sudo raspi-config
-# 	•	Navigate to System Options > Boot / Auto Login.
+__author__      = "Erik Arnell"
 
 # TODO
+# Add proper support for PIPER TTS as an alternative to espeak-ng
+# Add support for a Fat32 Partition on the SD for the audiobooks and progress file
+# Add support for a rotary encoder for volume control
 
-# components:
-# PI ZERO 
-# Arcade pushbutton with led 
-# USB soundcard
-# Rocker switch to change between book and chapter selection
-# Buttons to change book and chapter
-# SD card extension cable
-# Amplifier - Mini PAM8403 DC 5V 2 Channel USB Digital Audio Amplifier
-
-# echo 'Welcome to the world of speech synthesis!' | piper --model sv_SE-nst-medium.onnx --output file welcome.wav
-# wget https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_armv7.tar.gz
-# tar -xvzf piper_armv7.tar.gz
 import os
 import time
 import json
@@ -414,11 +396,6 @@ def change_book(direction):
 
 # Main loop to update progress periodically
 last_update = time.time()
-
-# Only call play_pause() if the music is not already playing
-#if not mixer.music.get_busy():
-#    print("Main loop - if not mixer.music.get_busy() - play_pause()")
-#    play_pause()  # Initialize playback if not already playing
 
 # Main loop to periodically update the position
 last_position_update = time.time()
