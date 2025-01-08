@@ -1,5 +1,5 @@
 # easy_reader
-An audio book player for the visually impaired 
+An audio book player for the visually impaired, made in python on a Raspberry Pi.
 
 ## Introduction
 
