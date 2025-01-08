@@ -8,7 +8,7 @@ An audio book player for the visually impaired
 **Raspberry Pi Zero**<br/>
 [Raspberry pi Zero](https://www.aliexpress.com/item/1005008224603338.html)<br/>
 [micro SD to SD extension cable](https://www.amazon.se/dp/B0C4L7DDZF)<br/>
-[Pi Zero kit with enclosure with accesories](https://www.amazon.se/dp/B0BJ1WFGMN)
+[Pi Zero kit with enclosure with accesories](https://www.amazon.se/dp/B0BJ1WFGMN) <br/>
 Micro usb power adapter. (Part of Pi Zero kit) <br/>
 
 **Audio playback**<br/>
