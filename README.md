@@ -1,12 +1,14 @@
 # Easy reader
 An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.<br /><br />
-The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or in any other way have a hard time interactivng with touch screen navigated technical devices. In this case, my grandmother in-law. <br /><br />
+The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or in any other way have a hard time interacting with touch screens. In this case, my grandmother in-law. <br /><br />
 
 The Easy Reader plays audiobooks in mp3 format from an SD card and is operated with one big illuminated button. When the button is pressed the audiobook starts playing from where you left off, with the option to skip back a selected number of seconds to recap. <br /><br />
 
-The reader can handle any number of books and will read them one after the other, pausing in between.  <br /><br />
+The reader can handle any number of books and will read them one after the other, pausing in between.<br /><br />
 
-On the side of the reader there is an interface made of a switch and two directional buttons used to navigate. This is interface is not needed to operate the player, but make it possible to switch between books and chapters. The swich is used to chose if you want to change the book title or the book chapter, and the directional buttons are used to navigate between books or chapters.  <br /><br />
+On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to switch between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate. <br /><br />
+
+The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
 
 
 ## Hardware
