@@ -5,9 +5,10 @@
 __author__      = "Erik Arnell"
 
 # TODO
-# Add proper support for PIPER TTS as an alternative to espeak-ng
+# Add proper support for PIPER TTS as an alternative to espeak-ng (is it to slow - can we generate and store wavs instead)
 # Add support for a Fat32 Partition on the SD for the audiobooks and progress file
-# Add support for a rotary encoder for volume control
+# Remove the need to specify paths in the code, make the paths relative to the application.
+# Add support for translation of TTS 
 
 import os
 import time
