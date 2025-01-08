@@ -25,7 +25,8 @@ TEMP_DIR = tempfile.gettempdir()  # Temporary directory for generated audio file
 REWIND_TIME = 5  # Seconds (adjust as needed)
 PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 
-EAYREADER_SPEED = 150 # 200 is fast, 150 is slow
+# SETTINGS
+TTS_SPEED = 150 # Speed for the speech syntesis. 200 is fast, 150 is slow
 USE_PIPER = False  # Set to True to use the piper TTS tool
 
 os.environ["PATH"] = os.environ["PATH"] + ":/home/admin/easyreader"
@@ -92,10 +93,10 @@ def speak(text):
         # Generate a new temporary `.wav` file for the given text
         speech_file = os.path.join(TEMP_DIR, "speech.wav")
         if USE_PIPER:
-            # Use the piper tool for TTS synthesis
+            # Use the piper tool for TTS synthesis (NOT FUNCTIONING AT THE MOMENT)
             command = f'echo "{text}" | piper --model sv_SE-nst-medium.onnx --output file {speech_file}'
         else:
-            command = f'espeak-ng -v sv+f3 -s {EAYREADER_SPEED} "{text}" -w {speech_file}'
+            command = f'espeak-ng -v sv+f3 -s {TTS_SPEED} "{text}" -w {speech_file}'
         #subprocess.call(command, shell=True)
         subprocess.run(command, shell=True, check=True)  # Wait until the process finishes
 
