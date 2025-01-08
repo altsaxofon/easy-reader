@@ -39,7 +39,7 @@ The player stores a list of books and listening progress in a json encoded txt f
 Pushing the play / pause button will play or pause the playback of the audiobook.
 During playback the progress will be coninuasly saved to a text file on the SD card of the player.
 
-When an audiobook is finished the playback the progress of that book will be reset to 0 and the playback will stop. The title of next audiobook on the SD-card will be read out loud by the speech synthesis, informing the user to push the play button to begin to listen to it.  
+When an audiobook is finished the progress of the book will be reset and the playback will stop. The title of next audiobook on the SD-card will be read out loud by the speech synthesis, informing the user to push the play button to begin to listen to it.  
 
 ### Settings mode
 Using the book/chapter switch or an or button will pause the music and set the player in "settings mode".
