@@ -6,7 +6,7 @@ The Easy Reader plays audiobooks in mp3 format from an SD card and is operated w
 
 The reader can handle any number of books and will read them one after the other, pausing in between.<br /><br />
 
-On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to switch between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate. <br /><br />
+On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate. <br /><br />
 
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
 
