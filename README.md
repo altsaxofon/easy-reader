@@ -30,6 +30,9 @@ USB-A to micro USB adapter. (Part of Pi Zero kit)  <br/>
 All audiobooks are stored in the directory /audiobooks/ as folders of MP3-files, prefereably one mp3 file per chapter of the book.
 The player will use the folder names to identify the books using the format *Author - Book Title*
 
+### Managing books
+The player stores a list of books and listening progress in a json encoded txt file on the SD card. The player will scan the /audiobooks/ directory and add or remove books from the registry to reflect any changes in the folder. To add or remove a book, just add or remove a folder in the SD-card. 
+
 ## Logic
 
 ### Listening
