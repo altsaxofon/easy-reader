@@ -1,9 +1,17 @@
-# easy_reader
-An audio book player for the visually impaired, made in python to run on a Raspberry Pi.
+# Easy reader
+An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.<br /><br />
+The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or in any other way have a hard time interactivng with touch screen navigated technical devices. In this case, my grandmother in-law. <br /><br />
 
-## Introduction
+The Easy Reader plays audiobooks in mp3 format from an SD card and is operated with one big illuminated button. When the button is pressed the audiobook starts playing from where you left off, with the option to skip back a selected number of seconds to recap. <br /><br />
 
-## Parts list
+The reader can handle any number of books and will read them one after the other, pausing in between.  <br /><br />
+
+On the side of the reader there is an interface made of a switch and two directional buttons used to navigate. This is interface is not needed to operate the player, but make it possible to switch between books and chapters. The swich is used to chose if you want to change the book title or the book chapter, and the directional buttons are used to navigate between books or chapters.  <br /><br />
+
+
+## Hardware
+
+### Parts list
 
 **Raspberry Pi Zero**<br/>
 [Raspberry pi Zero](https://www.aliexpress.com/item/1005008224603338.html)<br/>
@@ -24,7 +32,8 @@ USB-A to micro USB adapter. (Part of Pi Zero kit)  <br/>
 
 
 
-## Setup
+
+## Software
 
 ### Folder structure
 All audiobooks are stored in the directory /audiobooks/ as folders of MP3-files, prefereably one mp3 file per chapter of the book.
