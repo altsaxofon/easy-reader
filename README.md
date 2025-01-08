@@ -8,11 +8,12 @@ An audio book player for the visually impaired
 **Raspberry Pi Zero**<br/>
 [Raspberry pi Zero](https://www.aliexpress.com/item/1005008224603338.html)<br/>
 [micro SD to SD extension cable](https://www.amazon.se/dp/B0C4L7DDZF)<br/>
-Micro usb power adapter <br/>
+[Pi Zero kit with enclosure with accesories] (https://www.amazon.se/dp/B0BJ1WFGMN)
+Micro usb power adapter. (Part of Pi Zero kit) <br/>
 
 **Audio playback**<br/>
 [USB audio card](https://www.amazon.se/dp/B00IRVQ0F8)<br/>
-USB-A to micro USB adapter <br/>
+USB-A to micro USB adapter. (Part of Pi Zero kit)  <br/>
 [Small 5v amplifier](https://www.aliexpress.com/item/1005005852252380.html)<br/>
 2x 3w 4ohm Speakers<br/>
 
