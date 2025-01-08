@@ -20,6 +20,8 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 [micro SD to SD extension cable](https://www.amazon.se/dp/B0C4L7DDZF)<br/>
 [Pi Zero kit with enclosure with accesories](https://www.amazon.se/dp/B0BJ1WFGMN) <br/>
 Micro usb power adapter. (Part of Pi Zero kit) <br/>
+Micro SD 1tb
+Micro SD to SD adapter
 
 **Audio playback**<br/>
 [USB audio card](https://www.amazon.se/dp/B00IRVQ0F8)<br/>
