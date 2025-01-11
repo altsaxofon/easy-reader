@@ -84,3 +84,6 @@ In the virtual machine I added  I had a hard time geting it to work, the problem
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
 
+## Setting up pi
+
+https://forums.raspberrypi.com/viewtopic.php?t=26826 - enable file sharing
