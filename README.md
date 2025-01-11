@@ -1,12 +1,13 @@
 # Easy reader
-An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.<br /><br />
-The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or that in any other way have a hard time interacting with touch screens. In this case, my grandmother in-law. <br /><br />
+An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
 
-The Easy Reader plays audiobooks in mp3 format from an SD card and is operated with one big illuminated button. When the button is pressed the audiobook starts playing from where you left off, with the option to skip back a selected number of seconds to recap. <br /><br />
+The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or that in any other way have a hard time interacting with touch screens. In this case, my grandmother in-law. 
 
-The reader can handle any number of books and will read them one after the other, pausing in between.<br /><br />
+The Easy Reader plays audiobooks in mp3 format from an SD card and is operated with one big illuminated button. When the button is pressed the audiobook starts playing from where you left off, with the option to skip back a selected number of seconds to recap. 
 
-On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate. <br /><br />
+The reader can handle any number of books and will read them one after the other, pausing in between.
+
+On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate.
 
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
 
@@ -70,20 +71,26 @@ Changing books will not reset book progress. The progress  will be reset when a 
 
 
 
+## Setting up pi
 
-Install RaspberryPi OS to an SD-card using
-[Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+
+Install RaspberryPi OS to an SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+https://forums.raspberrypi.com/viewtopic.php?t=26826 - enable file sharing
+- set up SSH
+- 
 
 ### Repartition
-I want to be able to manage the audiobooks on a mac or PC. For this I need a fat32 partition on the SD card. This was harder than I thought. <br /><br />
+I want to be able to manage the audiobooks on a mac or PC. For this I need a fat32 partition on the SD card. This was harder than I thought.
 
-On my Macbook Air m2 I used [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).<br /><br />
+On my Macbook Air m2 I used [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).
 
 In the virtual machine I added  I had a hard time geting it to work, the problem seemed to have something to do with the display drivers. In the end I got it to work using the 'virtio-vga-gl (GPU Supported)' driver under the virtual machines display settings and the 'Other modes of Gparted  Live > Gparted (KMS)' version of Gparted.<br /><br />
 
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
+### Todo
+- clean code
+- create a list of requirements.txt
 
-## Setting up pi
 
-https://forums.raspberrypi.com/viewtopic.php?t=26826 - enable file sharing
+
