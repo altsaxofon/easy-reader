@@ -89,8 +89,22 @@ In the virtual machine I added  I had a hard time geting it to work, the problem
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
 ### Todo
-- clean code
-- create a list of requirements.txt
+**PI**
+- create and partition SD card
+- set up SSH
+- set up filesharing
+- test software
+- setup autostart
 
+**Software**
+- clean code
+- - remove 'duration' from JSON?
+- create a list of requirements.txt
+- create install?
+  
+** Hardware **
+- set up audio
+- cardboard prototype
+- 
 
 
