@@ -65,3 +65,9 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
 
+### Process
+Install RaspberryPi OS to an SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+I used the desktop version
+Use [UNetbootin](https://unetbootin.github.io/) to create a GParted [Live bootable USB](https://gparted.org/liveusb.php)
+
+
