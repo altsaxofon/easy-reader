@@ -65,9 +65,23 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
 
-### Process
-Install RaspberryPi OS to an SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
-I used the desktop version
-Use [UNetbootin](https://unetbootin.github.io/) to create a GParted [Live bootable USB](https://gparted.org/liveusb.php)
+### Create SD Card
+
+
+
+
+
+Install RaspberryPi OS to an SD-card using
+[Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+
+### Repartition
+I want to be able to manage the audiobooks on a mac or PC. For this I need a fat32 partition on the SD card. This was harder than I thought. 
+
+On my Macbook Air m2 I used [UTM](https://mac.getutm.app/) to create a virtual linux machine.
+
+In the virtual machine I added the [GParted Live bootable ISO](https://gparted.org/liveusb.php). I had a hard time geting it to work, the problem seemed to have something to do with the display drivers. 
+In the end I got it to work using the 'virtio-vga-gl (GPU Supported)' driver under the virtual machines display settings and the 'Other versions of Gparted > Gparted (KMS)' version of Gparted.
+
+In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
 
