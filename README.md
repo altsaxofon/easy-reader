@@ -1,4 +1,5 @@
 # Easy reader
+
 An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
 
 The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or that in any other way have a hard time interacting with touch screens. In this case, my grandmother in-law. 
@@ -10,6 +11,10 @@ The reader can handle any number of books and will read them one after the other
 On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate.
 
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
+
+> [!IMPORTANT]
+> I am no electronics expert, and many parts of the code was made with the help of Chat GPT - use common sense and follow at your own risk.
+
 
 
 ## Hardware
