@@ -84,7 +84,7 @@ I want to be able to manage the audiobooks on a mac or PC. For this I need a fat
 
 On my Macbook Air m2 I used [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).
 
-In the virtual machine I added  I had a hard time geting it to work, the problem seemed to have something to do with the display drivers. In the end I got it to work using the ´virtio-vga-gl (GPU Supported)´ driver under the virtual machines display settings and the 'Other modes of Gparted  ´Live > Gparted (KMS)´ version of Gparted.<br /><br />
+In the virtual machine I added  I had a hard time geting it to work, the problem seemed to have something to do with the display drivers. In the end I got it to work using the `virtio-vga-gl (GPU Supported)` driver under the virtual machines display settings and the 'Other modes of Gparted  `Live > Gparted (KMS)` version of Gparted.<br /><br />
 
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
