@@ -17,7 +17,7 @@ sudo apt install -y python3 python3-pip python3-venv espeak-ng
 VENV_DIR="$SCRIPT_DIR/easyreader_ve"
 if [ ! -d "$VENV_DIR" ]; then
     echo "Setting up Python virtual environment in the script directory..."
-    python3 -m venv "$VENV_DIR"
+    python3 -m venv --system-site-packages "$VENV_DIR"
     source "$VENV_DIR/bin/activate"
     pip install --upgrade pip
     pip install -r "$SCRIPT_DIR/requirements.txt"
