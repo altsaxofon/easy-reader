@@ -14,7 +14,6 @@ __author__      = "Erik Arnell"
 import os
 import time
 import json
-import lgpio
 from pygame import mixer
 from mutagen.mp3 import MP3 
 from gpiozero import Button, DigitalInputDevice, LED
