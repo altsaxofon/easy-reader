@@ -38,28 +38,9 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 |                    | Rocker switch On-On 2-position                                                                              | [Electrokit](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | TBD       |
 
 
-**Raspberry Pi Zero**<br/>
-[Raspberry pi Zero](https://www.aliexpress.com/item/1005008224603338.html)<br/>
-[micro SD to SD extension cable](https://www.amazon.se/dp/B0C4L7DDZF)<br/>
-[Pi Zero kit with enclosure with accesories](https://www.amazon.se/dp/B0BJ1WFGMN) <br/>
-Micro usb power adapter. (Part of Pi Zero kit) <br/>
-Micro SD 1tb
-Micro SD to SD adapter
-
-**Audio playback**<br/>
-[USB audio card](https://www.amazon.se/dp/B00IRVQ0F8)<br/>
-USB-A to micro USB adapter. (Part of Pi Zero kit)  <br/>
-[Small 5v amplifier](https://www.aliexpress.com/item/1005005852252380.html)<br/>
-2x 3w 4ohm Speakers<br/>
-
-**UI**<br/>
-[2x Smaller momentary push buttons](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)<br/>
-[1x Big led-illuminated arcade style button](https://www.aliexpress.com/item/1005007297493475.html)<br/>
-[Rocker switch On-on 2-position](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)<br/>
-
 ### Wiring diagram
 
-![Wiring](https://github.com/user-attachments/assets/e63170b1-c5f2-477c-a4f0-a40f728e1429)
+![wiring](https://github.com/user-attachments/assets/e9837eb8-c2be-41e9-ae5c-0bdf428fd56c)
 
 This is how i connected my components to the Raspberry Pi Zero.
 | Component | Pin | 
