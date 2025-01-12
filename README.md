@@ -78,16 +78,18 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
 ## How to setup
-### 1. Create tje SD Card
+### 1. Create the SD Card
 
 #### 1.1 Insatll Pi OS
 
 Create a  RaspberryPi OS SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
 I chose to install the lite version of the Pi OS, since our reader does not have a creen we do not need the desktop environment.
+
 *(I did, however, use a full installation of Pi Os with GUI to develop and prototype. If you, like me, are new to Pi and python this makes the process much easeri in my opinion)*
+
 Add your Wifi and enable SSH in the `apply OS customization settings` dialog .
 
-### 1.2 Repartition
+#### 1.2 Repartition
 The SD partition holsing the Pi OS uses a Linux filesystem `ext4` that cannot be read on mac or windows. Since I want to be able to manage the audiobooks from my mac we need to add a second, `Fat 32` partition. Since this (as far as I know) is not doable in macOS we need to jump thru some hoops to achieve it. 
 
 On my Macbook Air M2 running Sequoia I used the virtual machine utility [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).
@@ -98,7 +100,15 @@ In Gparted i resized the linux pi partition and created a Fat32 partition, acces
 On my 16GB SD card I left 8gb for the Pi Os and made a 7gb large partition for the audiobooks.  
 
 
-### install 
+### 2. Prapare the Pi
+
+#### Prepare the pi
+Set up SSH
+Set up nettalk
+
+### 3. Install Easyreader
+
+#### Get the files to the 
 `git clone https://github.com/altsaxofon/easy_reader.git``
 `cd easy_reader/``
 `chmod +x setup.sh`
