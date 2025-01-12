@@ -92,7 +92,13 @@ In Gparted i resized the linux pi partition and created a Fat32 partition, acces
 `cd easy_reader/``
 `chmod +x setup.sh`
 `./setup.sh`
-`sudo journalctl -u easyreader.service -f`
+after the setup is run, you might have to change the adress of your USB audio card.
+lookup the id of your USB audio device using `aplay -l``
+open the easy_reader.service:
+`sudo nano /etc/systemd/system/easyreader.service``
+and edit the line where the audio device is specified
+`Environment="AUDIODEV=hw:2,0" `
+replace the 2,0 with the adress of your device (cardnumber, device number)
 
 
 ### Todo

@@ -12,6 +12,7 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 echo "Updating system and installing dependencies..."
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3 python3-pip python3-venv espeak-ng
+sudo usermod -aG audio $USER  # 
 
 # Create virtual environment inside the script directory (only if it doesn't already exist)
 VENV_DIR="$SCRIPT_DIR/easyreader_ve"
@@ -52,6 +53,9 @@ User=$USER
 Group=$USER
 Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
+Environment="SDL_AUDIODRIVER=alsa"
+# Replace 1,0 with the USB audio card numbers from `aplay -l`
+# Environment="AUDIODEV=hw:2,0" 
 StandardOutput=journal
 StandardError=journal
 
