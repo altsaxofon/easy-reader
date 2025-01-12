@@ -102,9 +102,9 @@ In Gparted i resized the linux pi partition and created a Fat32 partition, acces
 - create a list of requirements.txt
 - create install?
   
-** Hardware **
+**Hardware**
 - set up audio
 - cardboard prototype
-- 
+- fritizing
 
 
