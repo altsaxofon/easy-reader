@@ -14,6 +14,7 @@ __author__      = "Erik Arnell"
 import os
 import time
 import json
+import lgpio
 from pygame import mixer
 from mutagen.mp3 import MP3 
 from gpiozero import Button, DigitalInputDevice, LED
@@ -86,6 +87,17 @@ switch_a.when_deactivated = switch_callback
 mixer.init()
 
 # Helper functions
+
+# Blink the LED 
+def blink_led():
+    button_led.on()
+    time.sleep(0.5)  # LED on for 0.5 seconds
+    button_led.off()
+    time.sleep(0.5)  # LED off for 0.5 seconds
+    button_led.on()
+    time.sleep(0.5)  # LED on for 0.5 seconds
+    button_led.off()
+
 
 def speak(text):
     global speech_sound, speech_file
@@ -401,6 +413,10 @@ def change_book(direction):
 
 
 # Main loop
+
+
+# Blink led to indicate startup
+blink_led()
 
 # Main loop to update progress periodically
 last_update = time.time()

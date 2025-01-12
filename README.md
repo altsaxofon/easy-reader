@@ -92,6 +92,7 @@ In Gparted i resized the linux pi partition and created a Fat32 partition, acces
 `cd easy_reader/``
 `chmod +x setup.sh`
 `./setup.sh`
+`sudo journalctl -u easyreader.service -f`
 
 
 ### Todo
