@@ -13,30 +13,28 @@ On the side of the reader there is an interface made of a switch and two directi
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
 
 > [!IMPORTANT]
-> I am no electronics expert, and many parts of the code was made with the help of Chat GPT - use common sense and follow at your own risk.
+> I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
+> Use common sense and follow at your own risk.
 
 
 
 ## Hardware
 
 ### Parts list
-# Parts List
 
 | **Category**      | **Item**                                                                                                      | **Link**                                                                                                  | **Price** |
 |--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|-----------|
-| **Raspberry Pi Zero** | Raspberry Pi Zero                                                                                          | [Link](https://www.aliexpress.com/item/1005008224603338.html)                                            | TBD       |
-|                    | micro SD to SD extension cable                                                                               | [Link](https://www.amazon.se/dp/B0C4L7DDZF)                                                              | TBD       |
-|                    | Pi Zero kit with enclosure and accessories                                                                   | [Link](https://www.amazon.se/dp/B0BJ1WFGMN)                                                              | TBD       |
-|                    | Micro USB power adapter (Part of Pi Zero kit)                                                                | N/A                                                                                                      | TBD       |
-|                    | Micro SD 1TB                                                                                                | N/A                                                                                                      | TBD       |
-|                    | Micro SD to SD adapter                                                                                      | N/A                                                                                                      | TBD       |
-| **Audio Playback** | USB audio card                                                                                              | [Link](https://www.amazon.se/dp/B00IRVQ0F8)                                                              | TBD       |
-|                    | USB-A to Micro USB adapter (Part of Pi Zero kit)                                                             | N/A                                                                                                      | TBD       |
-|                    | Small 5V amplifier                                                                                          | [Link](https://www.aliexpress.com/item/1005005852252380.html)                                            | TBD       |
-|                    | 2x 3W 4ohm speakers                                                                                         | N/A                                                                                                      | TBD       |
-| **UI**            | 2x Smaller momentary push buttons                                                                            | [Link](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)                                    | TBD       |
-|                    | 1x Big LED-illuminated arcade-style button                                                                   | [Link](https://www.aliexpress.com/item/1005007297493475.html)                                            | TBD       |
-|                    | Rocker switch On-On 2-position                                                                              | [Link](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | TBD       |
+| **Raspberry Pi Zero** | Raspberry Pi Zero   | [Electrokit](https://www.electrokit.com/raspberry-pi-zero-2-wh-med-header)         | TBD       |
+|                    | Pi Zero kit with enclosure and accessories     | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)    | TBD       |
+|                    | Micro SD with SD adapter   | [Aliexpress](https://www.aliexpress.com/item/1005007182352564.html) |    TBD       |                 
+|                    | micro SD to SD extension cable   | [Amazon](https://www.amazon.se/dp/B0C4L7DDZF)  | TBD       |
+| **Audio Playback** | USB audio card                                                                                              | [Amazon](https://www.amazon.se/dp/B00IRVQ0F8)                                                              | TBD       |
+|                    | USB-A to Micro USB adapter (Part of Pi Zero kit)                                                             | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)                                                                                                       | TBD       |
+|                    | Small 5V amplifier                                                                                          | [Ali express](https://www.aliexpress.com/item/1005005852252380.html)                                            | TBD       |
+|                    | 2x 3W 4ohm speakers                                                                                         | [A-Z parts]                                                                                                      | TBD       |
+| **UI**            | 2x Smaller momentary push buttons                                                                            | [Electrokit](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)                                    | TBD       |
+|                    | 1x Big LED-illuminated arcade-style button                                                                   | [Aliexpress](https://www.aliexpress.com/item/1005007297493475.html)                                            | TBD       |
+|                    | Rocker switch On-On 2-position                                                                              | [Electrokit](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | TBD       |
 
 
 **Raspberry Pi Zero**<br/>
