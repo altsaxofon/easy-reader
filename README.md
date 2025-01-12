@@ -35,8 +35,19 @@ USB-A to micro USB adapter. (Part of Pi Zero kit)  <br/>
 [1x Big led-illuminated arcade style button](https://www.aliexpress.com/item/1005007297493475.html)<br/>
 [Rocker switch On-on 2-position](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)<br/>
 
+### Wiring diagram
+This is how i connected my components to the Raspberry Pi Zero.
+| Component | Pin | 
+| :---   |    ---: |
+| Play button|  GPIO**17**  |
+| Play button led|  GPIO**18**    |
+| Next button     | GPIO**27**      |
+| Previous button     | GPIO**22**      |
+| Rocker switch     | GPIO**23**      |
 
-![Component setup](https://github.com/user-attachments/assets/5bb14840-bc11-46bc-9b18-c15df16b6d66)
+Note that only one of the poles of the rocker switch is needed for the player to work, and that the button LED is connected via a 330Ω resisitor
+
+![Wiring](https://github.com/user-attachments/assets/e63170b1-c5f2-477c-a4f0-a40f728e1429)
 
 
 ## Software
