@@ -43,7 +43,7 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 ![wiring](https://github.com/user-attachments/assets/e9837eb8-c2be-41e9-ae5c-0bdf428fd56c)
 > [!NOTE]
-> Note that the led is connected via a 330Ω resistor
+> Note that the led is connected via a 330Ω resistor.
 
 This is how i connected my components to the Raspberry Pi Zero.
 | Component | Pin | 
@@ -54,9 +54,7 @@ This is how i connected my components to the Raspberry Pi Zero.
 | Previous button     | GPIO**22**      |
 | Rocker switch     | GPIO**23**      |
 
-Note that only one of the poles of the rocker switch is needed for the player to work, and that the button LED is connected via a 330Ω resisitor
-
-
+The pin numbers are defined in `main.py`, change them if you want to use other pins.
 
 ## Software
 
