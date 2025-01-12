@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
+> Use common sense and follow at your own risk.
+
+
 # Easy reader
 
 An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
@@ -11,10 +16,6 @@ The reader can handle any number of books and will read them one after the other
 On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate.
 
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
-
-> [!IMPORTANT]
-> I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
-> Use common sense and follow at your own risk.
 
 
 
@@ -41,6 +42,8 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 ### Wiring diagram
 
 ![wiring](https://github.com/user-attachments/assets/e9837eb8-c2be-41e9-ae5c-0bdf428fd56c)
+> [!NOTE]
+> Note that the led is connected via a 330Ω resistor
 
 This is how i connected my components to the Raspberry Pi Zero.
 | Component | Pin | 
