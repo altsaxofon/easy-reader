@@ -33,7 +33,7 @@ REWIND_TIME = 5  # Seconds (adjust as needed)
 PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 
 # SETTINGS
-TTS_SPEED = 150 # Speed for the speech syntesis. 200 is fast, 150 is slow
+TTS_SPEED = 120 # Speed for the speech syntesis. 200 is fast, 150 is slow
 USE_PIPER = False  # Set to True to use the piper TTS tool
 
 os.environ["PATH"] = os.environ["PATH"] + ":/home/admin/easyreader"
@@ -228,7 +228,6 @@ def load_books():
             state["books"][book] = {
                 "position": 0,
                 "current_file": 0,
-                "duration": sum(get_file_length(f) for f in book_files)
             }
     # Remove books that no longer exist
     for book in existing_books:

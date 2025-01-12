@@ -37,7 +37,7 @@ fi
 
 # Create systemd service file
 echo "Creating systemd service..."
-SERVICE_FILE="/etc/systemd/system/easyreader.service"
+SERVICE_FILE="/etc/systemd/system/easy_reader.service"
 
 sudo bash -c "cat > $SERVICE_FILE" <<EOL
 [Unit]
@@ -55,7 +55,7 @@ Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
 Environment="SDL_AUDIODRIVER=alsa"
 # Replace 1,0 with the USB audio card numbers from `aplay -l`
-# Environment="AUDIODEV=hw:2,0" 
+# Environment="AUDIODEV=hw:1,0" 
 StandardOutput=journal
 StandardError=journal
 
@@ -66,14 +66,14 @@ EOL
 # Reload systemd to apply changes
 echo "Reloading systemd and enabling service..."
 sudo systemctl daemon-reload
-sudo systemctl enable easyreader.service
+sudo systemctl enable easy_reader.service
 
 # Start the service
 echo "Starting EasyReader service..."
-sudo systemctl start easyreader.service
+sudo systemctl start easy_reader.service
 
 # Check if the service is running
 echo "Checking service status..."
-sudo systemctl status easyreader.service
+sudo systemctl status easy_reader.service
 
 echo "Setup complete. EasyReader should now run automatically on boot."

@@ -82,7 +82,7 @@ The pi SD partition holsing the OS uses a Linux filesystem that is not easyli re
 
 On my Macbook Air m2 I used the virtual machine utility [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).
 
- I had a hard time geting Gparted to work - the problem seemed to have something to do with the display drivers. In the end I got it to work using the `virtio-vga-gl (GPU Supported)` driver under the virtual linux machines display settings and the `Other modes of Gparted Live > Gparted (KMS)` version of Gparted Live.<br /><br />
+ I had a hard time geting Gparted to work - the problem seemed to have something to do with the display drivers. In the end I got it to work using the `virtio-vga` driver under the virtual linux machines display settings and the `Other modes of Gparted Live > Gparted (KMS)` version of Gparted Live.<br /><br />
 
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
@@ -111,9 +111,9 @@ replace the 2,0 with the adress of your device (cardnumber, device number)
 
 **Software**
 - [ ] clean code
-- [ ] remove 'duration' from JSON?
-- [ ] create a list of requirements.txt
-- [ ] create install?
+- [*] remove 'duration' from JSON?
+- [*] create a list of requirements.txt
+- [*] create install?
   
 **Hardware**
 - [ ] set up audio
