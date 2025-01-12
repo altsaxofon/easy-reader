@@ -1,6 +1,6 @@
 > [!IMPORTANT]
 > I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
-> Use common sense and follow at your own risk.
+> Use common sense and follow at your own risk. Happy building!
 
 
 # Easy reader
