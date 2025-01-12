@@ -36,6 +36,7 @@ USB-A to micro USB adapter. (Part of Pi Zero kit)  <br/>
 [Rocker switch On-on 2-position](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)<br/>
 
 
+![Component setup](https://github.com/user-attachments/assets/5bb14840-bc11-46bc-9b18-c15df16b6d66)
 
 
 ## Software
