@@ -36,6 +36,9 @@ USB-A to micro USB adapter. (Part of Pi Zero kit)  <br/>
 [Rocker switch On-on 2-position](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)<br/>
 
 ### Wiring diagram
+
+![Wiring](https://github.com/user-attachments/assets/e63170b1-c5f2-477c-a4f0-a40f728e1429)
+
 This is how i connected my components to the Raspberry Pi Zero.
 | Component | Pin | 
 | :---   |    ---: |
@@ -47,7 +50,6 @@ This is how i connected my components to the Raspberry Pi Zero.
 
 Note that only one of the poles of the rocker switch is needed for the player to work, and that the button LED is connected via a 330Ω resisitor
 
-![Wiring](https://github.com/user-attachments/assets/e63170b1-c5f2-477c-a4f0-a40f728e1429)
 
 
 ## Software
