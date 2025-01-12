@@ -90,21 +90,23 @@ In Gparted i resized the linux pi partition and created a Fat32 partition, acces
 
 ### Todo
 **PI**
-- create and partition SD card
-- set up SSH
-- set up filesharing
-- test software
-- setup autostart
+- [ ] create and partition SD card
+- [ ] set up SSH
+- [ ] set up filesharing
+- [ ] test software
+- [ ] setup autostart
 
 **Software**
-- clean code
-- - remove 'duration' from JSON?
-- create a list of requirements.txt
-- create install?
+- [ ] clean code
+- [ ] remove 'duration' from JSON?
+- [ ] create a list of requirements.txt
+- [ ] create install?
   
 **Hardware**
-- set up audio
-- cardboard prototype
-- fritizing
+- [ ] set up audio
+- [ ] cardboard prototype
+
+**Documentation**
+- [ ] fritizing
 
 
