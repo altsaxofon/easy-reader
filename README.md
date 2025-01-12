@@ -66,25 +66,23 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
 
-### Create SD Card
+## Create SD Card
 
 
 
 
-## Setting up pi
+### Installing Pi OS
 
 
-Install RaspberryPi OS to an SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
-https://forums.raspberrypi.com/viewtopic.php?t=26826 - enable file sharing
-- set up SSH
-- 
+Install RaspberryPi OS to an SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/). Add your Wifi and enable SSH in the `apply OS customization settings` options. .
+
 
 ### Repartition
-I want to be able to manage the audiobooks on a mac or PC. For this I need a fat32 partition on the SD card. This was harder than I thought.
+The pi SD partition holsing the OS uses a Linux filesystem that is not easyli readable on mac or windows. Since I want to be able to manage the audiobooks from my mac i need to add a second, Fat 32 partition. To do this we need to use a disk utility running on a Linux system, I used [Gparted](https://gparted.org/).
 
-On my Macbook Air m2 I used [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).
+On my Macbook Air m2 I used the virtual machine utility [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).
 
-In the virtual machine I added  I had a hard time geting it to work, the problem seemed to have something to do with the display drivers. In the end I got it to work using the `virtio-vga-gl (GPU Supported)` driver under the virtual machines display settings and the 'Other modes of Gparted  `Live > Gparted (KMS)` version of Gparted.<br /><br />
+ I had a hard time geting Gparted to work - the problem seemed to have something to do with the display drivers. In the end I got it to work using the `virtio-vga-gl (GPU Supported)` driver under the virtual linux machines display settings and the `Other modes of Gparted Live > Gparted (KMS)` version of Gparted Live.<br /><br />
 
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
