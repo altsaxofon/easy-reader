@@ -1,8 +1,3 @@
-> [!IMPORTANT]
-> I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
-> Use common sense and follow at your own risk. Happy building!
-
-
 # Easy reader
 
 An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
@@ -17,6 +12,9 @@ On the side of the reader there is an interface made of a switch and two directi
 
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
 
+> [!IMPORTANT]
+> I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
+> Use common sense and follow at your own risk. Happy building!
 
 
 ## Hardware
@@ -57,23 +55,19 @@ This is how i connected my components to the Raspberry Pi Zero.
 The pin numbers are defined in `main.py`, change them if you want to use other pins.
 
 ## Software
+### How to use
+#### Managing books
+All audiobooks are stored in the directory /audiobooks/ on the Fat32 partition of the SD card that is accesible form mac / windows. Each book is a folder of MP3-files (prefereably one mp3 file per chapter of the book). The player uses the folder names to identify the books using the format `Author - Book Title`
 
-### Folder structure
-All audiobooks are stored in the directory /audiobooks/ as folders of MP3-files, prefereably one mp3 file per chapter of the book.
-The player will use the folder names to identify the books using the format *Author - Book Title*
-
-### Managing books
 The player stores a list of books and listening progress in a json encoded txt file on the SD card. The player will scan the /audiobooks/ directory and add or remove books from the registry to reflect any changes in the folder. To add or remove a book, just add or remove a folder in the SD-card. 
 
-## Logic
-
-### Listening
-Pushing the play / pause button will play or pause the playback of the audiobook.
+#### Listening
+Pushing the play / pause button will play or pause the playback of the audiobook. When playback resumes the player rewinds 15 seconds for a small recap. The number of esonds can be changed in `main.py`
 During playback the progress will be coninuasly saved to a text file on the SD card of the player.
 
 When an audiobook is finished the progress of the book will be reset and the playback will stop. The title of next audiobook on the SD-card will be read out loud by the speech synthesis, informing the user to push the play button to begin to listen to it.  
 
-### Settings mode
+#### Changing book or chapter
 Using the book/chapter switch or a directional button will pause the music and set the player in "settings mode".
 Depending on the state of the book/chapter switch the current book title or chapter will be read out loud by the speech synthesis. 
 
@@ -83,20 +77,20 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
-
-## Create SD Card
-
-
+### How to setup
+## 1. Create SD Card
 
 
-### Installing Pi OS
 
 
-Install RaspberryPi OS to an SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/). Add your Wifi and enable SSH in the `apply OS customization settings` options. .
+### 1.2 Installing Pi OS
 
 
-### Repartition
-The pi SD partition holsing the OS uses a Linux filesystem that is not easyli readable on mac or windows. Since I want to be able to manage the audiobooks from my mac i need to add a second, Fat 32 partition. To do this we need to use a disk utility running on a Linux system, I used [Gparted](https://gparted.org/).
+Install RaspberryPi OS to an SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/). Add your Wifi and enable SSH in the `apply OS customization settings` dialog .
+
+
+### 1.3 Repartition
+The SD partition holsing the Pi OS uses a Linux filesystem `ext4` that cannot be read on mac or windows. Since I want to be able to manage the audiobooks from my mac i need to add a second, `Fat 32` partition. 
 
 On my Macbook Air m2 I used the virtual machine utility [UTM](https://mac.getutm.app/) to create a virtual linux machine (using the Emulate setting) and adding the [GParted Live bootable ISO](https://gparted.org/liveusb.php).
 
