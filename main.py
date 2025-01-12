@@ -6,7 +6,6 @@ __author__      = "Erik Arnell"
 
 # TODO
 # Add proper support for PIPER TTS as an alternative to espeak-ng (is it to slow - can we generate and store wavs instead)
-# Add support for a Fat32 Partition on the SD for the audiobooks and progress file
 # Remove the need to specify paths in the code, make the paths relative to the application.
 # Add support for translation of TTS 
 
@@ -20,8 +19,13 @@ import subprocess
 import tempfile
 
 # Constants
-AUDIO_FOLDER = "/home/admin/easyreader/audiobooks"  # Use a local folder in the project for MP3s
-STATE_FILE = "/home/admin/easyreader/playback_state.json"  # Save playback state locally
+#AUDIO_FOLDER = "/home/admin/easyreader/audiobooks"  # Use a local folder in the project for MP3s
+#STATE_FILE = "/home/admin/easyreader/playback_state.json"  # Save playback state locally
+
+SD_CARD_PATH = "/media/admin/CF2B-FA41"  # Path to SD card (FAT32 partition) (update as necessary)
+AUDIO_FOLDER = os.path.join(SD_CARD_PATH, "audiobooks")  # Audiobooks are stored here
+STATE_FILE = os.path.join(SD_CARD_PATH, "playback_state.json")  # Progress state file
+
 TEMP_DIR = tempfile.gettempdir()  # Temporary directory for generated audio files
 REWIND_TIME = 5  # Seconds (adjust as needed)
 PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
@@ -92,20 +96,23 @@ def speak(text):
         speech_file = os.path.join(TEMP_DIR, "speech.wav")
         if USE_PIPER:
             # Use the piper tool for TTS synthesis (NOT FUNCTIONING AT THE MOMENT)
-            command = f'echo "{text}" | piper --model sv_SE-nst-medium.onnx --output file {speech_file}'
+            command = f'echo "{text}" | /home/admin/easyreader/piper/piper --model /home/admin/easyreader/piper/sv_SE-nst-medium.onnx --output-raw | aplay -r 22050 -f S16_LE -t raw -'
+            subprocess.run(command, shell=True, check=True)  # Wait until the process finishes
+
+            # --output file {speech_file}'
         else:
             command = f'espeak-ng -v sv+f3 -s {TTS_SPEED} "{text}" -w {speech_file}'
-        #subprocess.call(command, shell=True)
-        subprocess.run(command, shell=True, check=True)  # Wait until the process finishes
+            #subprocess.call(command, shell=True)
+            subprocess.run(command, shell=True, check=True)  # Wait until the process finishes
 
-        # Stop any ongoing TTS playback
-        if speech_sound and mixer.get_busy():
-            print("Stopping current TTS playback.")
-            speech_sound.stop()
+            # Stop any ongoing TTS playback
+            if speech_sound and mixer.get_busy():
+                print("Stopping current TTS playback.")
+                speech_sound.stop()
 
-        # Load the generated file and play it
-        speech_sound = mixer.Sound(speech_file)
-        speech_sound.play()
+            # Load the generated file and play it
+            speech_sound = mixer.Sound(speech_file)
+            speech_sound.play()
 
     except Exception as e:
         print(f"Error in speak(): {e}")
@@ -420,5 +427,3 @@ while True:
     
     # wait 0.1 sek IS THIS GOOD? (question to chat GPT)
     time.sleep(0.1)
-
-  
