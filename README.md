@@ -15,6 +15,24 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 ## Hardware
 
 ### Parts list
+# Parts List
+
+| **Category**      | **Item**                                                                                                      | **Link**                                                                                                  | **Price** |
+|--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|-----------|
+| **Raspberry Pi Zero** | Raspberry Pi Zero                                                                                          | [Link](https://www.aliexpress.com/item/1005008224603338.html)                                            | TBD       |
+|                    | micro SD to SD extension cable                                                                               | [Link](https://www.amazon.se/dp/B0C4L7DDZF)                                                              | TBD       |
+|                    | Pi Zero kit with enclosure and accessories                                                                   | [Link](https://www.amazon.se/dp/B0BJ1WFGMN)                                                              | TBD       |
+|                    | Micro USB power adapter (Part of Pi Zero kit)                                                                | N/A                                                                                                      | TBD       |
+|                    | Micro SD 1TB                                                                                                | N/A                                                                                                      | TBD       |
+|                    | Micro SD to SD adapter                                                                                      | N/A                                                                                                      | TBD       |
+| **Audio Playback** | USB audio card                                                                                              | [Link](https://www.amazon.se/dp/B00IRVQ0F8)                                                              | TBD       |
+|                    | USB-A to Micro USB adapter (Part of Pi Zero kit)                                                             | N/A                                                                                                      | TBD       |
+|                    | Small 5V amplifier                                                                                          | [Link](https://www.aliexpress.com/item/1005005852252380.html)                                            | TBD       |
+|                    | 2x 3W 4ohm speakers                                                                                         | N/A                                                                                                      | TBD       |
+| **UI**            | 2x Smaller momentary push buttons                                                                            | [Link](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)                                    | TBD       |
+|                    | 1x Big LED-illuminated arcade-style button                                                                   | [Link](https://www.aliexpress.com/item/1005007297493475.html)                                            | TBD       |
+|                    | Rocker switch On-On 2-position                                                                              | [Link](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | TBD       |
+
 
 **Raspberry Pi Zero**<br/>
 [Raspberry pi Zero](https://www.aliexpress.com/item/1005008224603338.html)<br/>
@@ -125,9 +143,9 @@ replace the 2,0 with the adress of your device (cardnumber, device number)
 
 **Software**
 - [ ] clean code
-- [*] remove 'duration' from JSON?
-- [*] create a list of requirements.txt
-- [*] create install?
+- [x] remove 'duration' from JSON?
+- [x] create a list of requirements.txt
+- [x] create install?
   
 **Hardware**
 - [ ] set up audio
