@@ -5,6 +5,8 @@
 __author__      = "Erik Arnell"
 
 # TODO
+# use python espeak-ng library instead of subprocess
+
 # Add proper support for PIPER TTS as an alternative to espeak-ng (is it to slow - can we generate and store wavs instead)
 # Remove the need to specify paths in the code, make the paths relative to the application.
 # Add support for translation of TTS 

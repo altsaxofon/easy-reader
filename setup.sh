@@ -1,20 +1,38 @@
 #!/bin/bash
 
-# Update and install dependencies
+echo "EasyReader Setup Script"
+
+# Get the current user dynamically
+USER=$(whoami)
+
+# Get the directory of the setup script
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+
+# Update and install dependencies (only the ones that are necessary)
 echo "Updating system and installing dependencies..."
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3 python3-pip python3-venv espeak-ng
 
-# Create virtual environment (optional)
-echo "Setting up Python virtual environment..."
-python3 -m venv /home/admin/easyreader_ve
-source /home/admin/easyreader_ve/bin/activate
-pip install -r /home/admin/easyreader/requirements.txt
-deactivate
+# Create virtual environment inside the script directory (only if it doesn't already exist)
+VENV_DIR="$SCRIPT_DIR/easyreader_ve"
+if [ ! -d "$VENV_DIR" ]; then
+    echo "Setting up Python virtual environment in the script directory..."
+    python3 -m venv "$VENV_DIR"
+    source "$VENV_DIR/bin/activate"
+    pip install --upgrade pip
+    pip install -r "$SCRIPT_DIR/requirements.txt"
+    deactivate
+else
+    echo "Virtual environment already exists. Skipping creation."
+fi
 
-# Add the pi user to the audio group
+# Add the current user to the audio group (only if not already a member)
 echo "Ensuring the user has audio permissions..."
-sudo usermod -aG audio pi
+if ! groups $USER | grep -q '\baudio\b'; then
+    sudo usermod -aG audio $USER
+else
+    echo "$USER is already in the audio group."
+fi
 
 # Create systemd service file
 echo "Creating systemd service..."
@@ -27,12 +45,12 @@ After=sound.target
 Wants=sound.target
 
 [Service]
-ExecStart=/home/admin/easyreader_ve/bin/python /home/admin/easyreader/main.py
-WorkingDirectory=/home/admin/easyreader
+ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
+WorkingDirectory=$SCRIPT_DIR
 Restart=always
-User=pi
-Group=pi
-Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+User=$USER
+Group=$USER
+Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
 StandardOutput=journal
 StandardError=journal

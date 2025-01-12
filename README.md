@@ -86,6 +86,14 @@ On my Macbook Air m2 I used the virtual machine utility [UTM](https://mac.getutm
 
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiofiles.
 
+
+### install 
+`git clone https://github.com/altsaxofon/easy_reader.git``
+`cd easy_reader/``
+`chmod +x setup.sh`
+`./setup.sh`
+
+
 ### Todo
 **PI**
 - [ ] create and partition SD card
