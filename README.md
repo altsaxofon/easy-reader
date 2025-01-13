@@ -78,7 +78,8 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
 #### Speech synthesis
-The easy reader gives spoken feedback when using the interface via a text to speech system. This speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
+The easy reader gives spoken feedback text to speech engine when the interface is used. The speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
+
 
 ## How to setup
 ### 1. Create the SD Card
@@ -115,8 +116,6 @@ Log in to pi with SSH `ssh pi@raspberrypi.local`
 I set up file sharing with samba using the description [here](https://subscription.packtpub.com/book/iot-and-hardware/9781849696623/1/ch01lvl1sec19/sharing-the-home-folder-of-the-raspberry-pi-with-smb
 )
 
-### 3. Install Easyreader
-
 #### Download and setup
 Install git and download Easyreader (or copy it over to the PI some other way)
 `sudo apt install git`
@@ -129,12 +128,50 @@ Make the setup script executable and run it
 `chmod +x setup.sh`
 `./setup.sh`
 
-The setup script creates a service that loads the easy_reader python script. It is set to auto run when the pi is booted. 
+The setup script creates a service that mounts the fat32 partition and loads the easy_reader python script. It will auto run when the pi is booted. 
 
-#### Configure audio
+> [!NOTE]
+>The first time the easyreader boots it will generate wav files for the speech wynthesis, and this might take som time 
+
+### 3. Configure Easyreader
+
+
+
+### Not working?
+If the software is not working it can be a good idea to activate the virtual environment and run the `main.py` from the terminal to see any error messages.
+"""
+/home/pi/easy_reader/easyreader_ve/bin/python /home/pi/easy_reader/main.py
+"""
+*assuming `pi`is the username*
+
+It might be neccecary to stop the service first using the command
+
+"""
+sudo systemctl stop easy_reader.service
+"""
+
+If the script is working from the terminal but not on boot it can be helpful to look at the log for the easy_reader.service with the command.
+
+"""
+journalctl -u easy_reader.service -b
+"""
+
+For example, the service could be trying to mount the wrong `Fat32`partition.
+You can open and edit the service with the command
+
+"""
+sudo nano /etc/systemd/system/easy_reader.service
+"""
+
+
+## Software
+
+
 
 Then open the easy_reader.service:
-`sudo nano /etc/systemd/system/easy_reader.service``
+"""
+sudo nano /etc/systemd/system/easy_reader.service
+"""
 
 and edit the line where the audio device is specified
 `Environment="AUDIODEV=hw:2,0" `
