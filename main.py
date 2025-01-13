@@ -115,19 +115,6 @@ def blink_led():
     time.sleep(0.5)  # LED on for 0.5 seconds
     button_led.off()
 
-def blink_led_cont():
-    global blinking
-    """Blink the LED continuously until stopped."""
-    while blinking:
-        button_led.on()
-        time.sleep(0.5)  # LED on for 0.5 seconds
-        button_led.off()
-        time.sleep(0.5)  # LED off for 0.5 seconds
-
-def stop_blinking():
-    """Stop the continuous blinking of the LED."""
-    global blinking
-    blinking = False
 
 def speak(text, speak_audio=True, ):
     global speech_sound, speech_file

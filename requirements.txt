@@ -2,3 +2,4 @@ gpiozero==2.0.1
 lgpio==0.2.2.0
 mutagen==1.47.0
 pygame==2.6.1
+dimits==0.0.30a0
