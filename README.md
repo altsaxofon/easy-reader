@@ -85,7 +85,7 @@ Changing books will not reset book progress. The progress  will be reset when a 
 Create a  RaspberryPi OS SD-card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
 I chose to install the lite version of the Pi OS, since our reader does not have a creen we do not need the desktop environment.
 
-*(I did, however, use a full installation of Pi Os with GUI to develop and prototype. If you, like me, are new to Pi and python this makes the process much easeri in my opinion)*
+*(I did, however, use a full installation of Pi OS with GUI to develop and prototype. If you, like me, are new to Pi and python this makes the process way easier)*
 
 Add your Wifi and enable SSH in the `apply OS customization settings` dialog .
 
