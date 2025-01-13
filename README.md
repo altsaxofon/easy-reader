@@ -97,29 +97,55 @@ On my Macbook Air M2 running Sequoia I used the virtual machine utility [UTM](ht
 I had a hard time geting Gparted to work with UTM - the problem seemed to have something to do with the display drivers. After some trial and error I got it to work using the `virtio-vga` driver under the VMs display settings together with the `Other modes of Gparted Live > Gparted (KMS)` version of Gparted Live. 
 
 In Gparted i resized the linux pi partition and created a Fat32 partition, accesible to a mac, to store the audiobooks. 
-On my 16GB SD card I left 8gb for the Pi Os and made a 7gb large partition for the audiobooks.  
+On my 32GB SD card I left ~6gb for the Pi Os and made a ~23gb large partition for the audiobooks.  
 
+<img width="700" alt="Layer 1" src="https://github.com/user-attachments/assets/afebfa0e-f34e-4e67-ae76-3092e302d381" /><br />
+SD card before partitioning
 
-### 2. Prapare the Pi
+<img width="700" alt="Layer 2" src="https://github.com/user-attachments/assets/669ccbd6-89a6-48bb-8cac-6f7838c473b6" /><br />
+SD card after partitioning
 
-#### Prepare the pi
-Set up SSH
-Set up nettalk
+### 2.  Install Easyreader
+Log in to pi with SSH `ssh pi@raspberrypi.local`
+
+#### Prepare the Pi
+I set up file sharing with samba using the description [here](https://subscription.packtpub.com/book/iot-and-hardware/9781849696623/1/ch01lvl1sec19/sharing-the-home-folder-of-the-raspberry-pi-with-smb
+)
 
 ### 3. Install Easyreader
 
-#### Get the files to the 
-`git clone https://github.com/altsaxofon/easy_reader.git``
-`cd easy_reader/``
+#### Download and setup
+Install git and download Easyreader (or copy it over to the PI some other way)
+`sudo apt install git`
+`git clone https://github.com/altsaxofon/easy_reader.git`
+
+Navigate to the easy reader directory
+`cd easy_reader/`
+
+Make the setup script executable and run it
 `chmod +x setup.sh`
 `./setup.sh`
-after the setup is run, you might have to change the adress of your USB audio card.
-lookup the id of your USB audio device using `aplay -l``
-open the easy_reader.service:
+
+The setup script creates a service that loads the easy_reader python script. It is set to auto run when the pi is booted. 
+
+#### Configure audio
+You might need to change the adress of the USB audio card:
+First lookup the id of your USB audio device using 
+`aplay -l`
+
+Then open the easy_reader.service:
 `sudo nano /etc/systemd/system/easyreader.service``
+
 and edit the line where the audio device is specified
 `Environment="AUDIODEV=hw:2,0" `
 replace the 2,0 with the adress of your device (cardnumber, device number)
+
+#### Change settings
+
+#### Add books
+
+
+
 
 
 ### Todo
