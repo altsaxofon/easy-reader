@@ -13,17 +13,32 @@ __author__      = "Erik Arnell"
 
 import os
 import time
+import threading
 import json
 from pygame import mixer
 from mutagen.mp3 import MP3 
 from gpiozero import Button, DigitalInputDevice, LED
 import subprocess
 import tempfile
+from dimits import Dimits
 
 
 SD_CARD_PATH = "/mnt/sdcard"  # Path to SD card (FAT32 partition) (update as necessary)
 
-# SETTINGS
+# TTS SETTINGS
+# Initialize Dimits with the desired voice model
+
+dt = Dimits("sv_SE-nst-medium")
+
+# Phrases
+PHRASES = {
+    "choose_book": "Välj bok",
+    "choose_capter": "Välj del",
+    "chapter": "Del",
+    "by": "av"
+    }
+
+
 TTS_SPEED = 120 # Speed for the speech syntesis. 200 is fast, 150 is slow
 USE_PIPER = False  # Set to True to use the piper TTS tool
 
@@ -39,16 +54,16 @@ LED_PIN = 18
 SWITCH_PIN_A = 23
 
 # Paths
+
 AUDIO_FOLDER = os.path.join(SD_CARD_PATH, "audiobooks")  # Audiobooks are stored here
 STATE_FILE = os.path.join(SD_CARD_PATH, "playback_state.json")  # Progress state file
 
-TEMP_DIR = tempfile.gettempdir()  # Temporary directory for generated audio files
 REWIND_TIME = 5  # Seconds (adjust as needed)
 PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 
-# Constants
-#AUDIO_FOLDER = "/home/admin/easyreader/audiobooks"  # Use a local folder in the project for MP3s
-#STATE_FILE = "/home/admin/easyreader/playback_state.json"  # Save playback state locally
+# Global variables to control the LED blinking
+blinking = False
+
 
 # Initialize hardware
 
@@ -100,41 +115,89 @@ def blink_led():
     time.sleep(0.5)  # LED on for 0.5 seconds
     button_led.off()
 
+def blink_led_cont():
+    global blinking
+    """Blink the LED continuously until stopped."""
+    while blinking:
+        button_led.on()
+        time.sleep(0.5)  # LED on for 0.5 seconds
+        button_led.off()
+        time.sleep(0.5)  # LED off for 0.5 seconds
 
-def speak(text):
+def stop_blinking():
+    """Stop the continuous blinking of the LED."""
+    global blinking
+    blinking = False
+
+def speak(text, speak_audio=True, ):
     global speech_sound, speech_file
-    print(f"Speaking: {text}")
+    global dt
+    # Ensure that dt is passed if needed
+    if dt is None:
+        raise ValueError("Dimits object 'dt' is required.")
+
+    # Generate a safe filename for the WAV file (without list wrapping or duplicated extensions)
+    filename = text.replace(" ", "_").replace("ä", "a").replace("å", "a").replace("ö", "o").lower()
+    filename_wav = f"{filename}.wav"
+    filepath = os.path.join("/home/pi/voice/", filename_wav)
+
     try:
-        # Cleanup the previous temporary file
-        cleanup_tts_file()
-
-        # Generate a new temporary `.wav` file for the given text
-        speech_file = os.path.join(TEMP_DIR, "speech.wav")
-        if USE_PIPER:
-            # Use the piper tool for TTS synthesis (NOT FUNCTIONING AT THE MOMENT)
-            command = f'echo "{text}" | /home/admin/easyreader/piper/piper --model /home/admin/easyreader/piper/sv_SE-nst-medium.onnx --output-raw | aplay -r 22050 -f S16_LE -t raw -'
-            subprocess.run(command, shell=True, check=True)  # Wait until the process finishes
-
-            # --output file {speech_file}'
+        # Check if the file exists
+        print(filepath)
+        if not os.path.exists(filepath):
+            # If the file doesn't exist, generate it
+            print(f"Generating audio file for: {text}")
+            dt.text_2_audio_file(text, filename, "/home/pi/voice/", format="wav")
         else:
-            command = f'espeak-ng -v sv+f3 -s {TTS_SPEED} "{text}" -w {speech_file}'
-            #subprocess.call(command, shell=True)
-            subprocess.run(command, shell=True, check=True)  # Wait until the process finishes
+            print(f"Audio file for '{text}' already exists.")
 
-            # Stop any ongoing TTS playback
+        if speak_audio:
+            # If the flag is True, play the generated audio file
+            print(f"Speaking: {text}")
+            # Stop any previous speech playback
             if speech_sound and mixer.get_busy():
                 print("Stopping current TTS playback.")
                 speech_sound.stop()
 
-            # Load the generated file and play it
-            speech_sound = mixer.Sound(speech_file)
+            # Load and play the speech sound
+            speech_sound = mixer.Sound(filepath)
             speech_sound.play()
+        else:
+            print(f"Pre-generated WAV for '{text}' is ready but not spoken.")
 
     except Exception as e:
         print(f"Error in speak(): {e}")
+
+
+def pre_generate_tts():
+    """Pre-generate TTS phrases and blink LED while doing so."""
+    # Suspend other app functionality (e.g., music)
+    global state
+
+    # Start blinking LED in a separate thread to avoid blocking
+    blink_thread = threading.Thread(target=blink_led)
+    blink_thread.start()
+
+    # Generate the TTS phrases
+    try:
+        for phrase in PHRASES.values():
+            speak(phrase, speak_audio=False)  # Generate TTS without speaking it
+
+        for chapter_num in range(1, 101):
+            chapter_phrase = f"{PHRASES['chapter']} {chapter_num}"
+            speak(chapter_phrase, speak_audio=False)  # Generate TTS for chapter titles
+
+        for book_name in state["books"]:
+            author, title = get_author_and_title(book_name)
+            speak(title+" "+PHRASES['by']+" "+author, speak_audio=False)
+
+    except Exception as e:
+        print(f"Error during TTS pre-generation: {e}")
     finally:
-        # Ensure temporary files are cleaned up
-        cleanup_tts_file()
+        print("pre generation done")
+
+        # Allow the rest of the app to resume
+        is_playing = True
 
 # Helper function to clean up temporary files
 def cleanup_tts_file():
@@ -171,6 +234,13 @@ def save_state(state):
         json.dump(state, f, indent=4)  # Added indent for better readability
     os.chmod(STATE_FILE, 0o664)  # user read/write, group read/write, others read
 
+def get_author_and_title(book_name):
+    """Extracts the author and title from the book folder name."""
+    author, title = "Unknown", book_name
+    if " - " in book_name:
+        author, title = book_name.split(" - ", 1)
+    return author, title
+
 def get_book_files(book_name):
     """Returns the list of MP3 files for the book, and its metadata."""
     # Get all subdirectories (books) in AUDIO_FOLDER, skipping non-directories
@@ -188,12 +258,7 @@ def get_book_files(book_name):
 
     # Extract author and title from folder name (e.g., "Author - Title")
     folder_name = book_name
-    if " - " in folder_name:
-        author, title = folder_name.split(" - ", 1)
-    else:
-        # Default to entire folder name as title if the format is not followed
-        author = "Unknown"
-        title = folder_name
+    author, title = get_author_and_title(folder_name)
 
     # Get and return the list of MP3 files in the book folder and metadata
     mp3_files = sorted([
@@ -227,7 +292,8 @@ def load_books():
         if book not in existing_books:
             print(f"Adding new book: {book}")
             # Get the files and metadata for the book
-            book_files, author, title = get_book_files(book)
+            author, title = get_author_and_title(book)
+            speak(title+" "+PHRASES['by']+" "+author)
             state["books"][book] = {
                 "position": 0,
                 "current_file": 0,
@@ -245,6 +311,8 @@ def load_books():
 
     save_state(state)
     return state
+
+
 
 
 
@@ -330,9 +398,9 @@ def arrow_key_pushed(direction):
         play_pause()
 
         if switch_a.value == 1:
-            speak("Välj bok. Nuvarande bok är: " + state["current_book"])
+            speak(PHRASES["choose_book"])
         else:
-            speak("Välj kapitel. Nuvarande kapitel är: " + str(state["books"][state["current_book"]]["current_file"] + 1))
+            speak(PHRASES["choose_capter"])
  
 
 def play_next():
@@ -388,7 +456,7 @@ def change_chapter(direction):
     book_state["position"] = 0
     start_time = 0
     current_file = book_files[book_state["current_file"]]
-    speak("Kapitel " + str(book_state["current_file"] + 1))
+    speak(PHRASES["chapter"]+" "+ str(book_state["current_file"] + 1))
 
     save_state(state)
 
@@ -411,8 +479,8 @@ def change_book(direction):
     current_book = book_names[current_index]
     state["current_book"] = current_book
     save_state(state)  # Save updated state
-    speak(current_book)
-
+    author, title = get_author_and_title(current_book)
+    speak(title+" "+PHRASES['by']+" "+author)
 
 # Main loop
 
@@ -426,7 +494,9 @@ last_update = time.time()
 # Main loop to periodically update the position
 last_position_update = time.time()
 
-
+# Pre generate TTS:
+pre_generate_tts()
+                         
 while True:
     #time.sleep(0.1)
 
@@ -445,5 +515,4 @@ while True:
     if not mixer.music.get_busy() and is_playing:
         play_next()
     
-    # wait 0.1 sek IS THIS GOOD? (question to chat GPT)
     time.sleep(0.1)
