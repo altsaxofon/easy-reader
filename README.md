@@ -139,29 +139,30 @@ The setup script creates a service that mounts the fat32 partition and loads the
 
 ### Not working?
 If the software is not working it can be a good idea to activate the virtual environment and run the `main.py` from the terminal to see any error messages.
-"""
+```
 /home/pi/easy_reader/easyreader_ve/bin/python /home/pi/easy_reader/main.py
-"""
+```
 *assuming `pi`is the username*
 
 It might be neccecary to stop the service first using the command
 
-"""
+
+```
 sudo systemctl stop easy_reader.service
-"""
+```
 
 If the script is working from the terminal but not on boot it can be helpful to look at the log for the easy_reader.service with the command.
 
-"""
+```
 journalctl -u easy_reader.service -b
-"""
+```
 
 For example, the service could be trying to mount the wrong `Fat32`partition.
 You can open and edit the service with the command
 
-"""
+```
 sudo nano /etc/systemd/system/easy_reader.service
-"""
+```
 
 
 ## Software
