@@ -11,7 +11,7 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 # Update and install dependencies (only the ones that are necessary)
 echo "Updating system and installing dependencies..."
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y python3 python3-pip python3-venv espeak-ng
+sudo apt install -y python3 python3-pip python3-venv espeak-ng mpg123
 sudo usermod -aG audio $USER  # 
 
 # Create virtual environment inside the script directory (only if it doesn't already exist)
@@ -47,16 +47,14 @@ Wants=sound.target
 
 [Service]
 ExecStartPre=/bin/mkdir -p /mnt/sdcard
-ExecStartPre=/bin/mount /dev/mmcblk0p1 /mnt/sdcard
+ExecStartPre=/bin/mount -o uid=1000,gid=1000,umask=0022 /dev/mmcblk0p3 /mnt/sdcard
 ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
 WorkingDirectory=$SCRIPT_DIR
 Restart=always
-User=$USER
-Group=$USER
+
 Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
 Environment="SDL_AUDIODRIVER=alsa"
-# Replace 1,0 with the USB audio card numbers from aplay -l
 # Environment="AUDIODEV=hw:0,0" 
 StandardOutput=journal
 StandardError=journal

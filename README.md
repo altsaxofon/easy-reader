@@ -140,6 +140,15 @@ and edit the line where the audio device is specified
 `Environment="AUDIODEV=hw:2,0" `
 replace the 2,0 with the adress of your device (cardnumber, device number)
 
+sudo systemctl start easy_reader.service
+sudo systemctl status easy_reader.service
+
+/home/pi/easy_reader/easyreader_ve/bin/python /home/pi/easy_reader/main.py
+
+logs:
+journalctl -u easy_reader.service -b
+
+
 #### Change settings
 
 #### Add books

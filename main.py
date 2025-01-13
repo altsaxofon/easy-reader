@@ -21,7 +21,7 @@ import subprocess
 import tempfile
 
 
-SD_CARD_PATH = "/mnt/sd"  # Path to SD card (FAT32 partition) (update as necessary)
+SD_CARD_PATH = "/mnt/sdcard"  # Path to SD card (FAT32 partition) (update as necessary)
 
 # SETTINGS
 TTS_SPEED = 120 # Speed for the speech syntesis. 200 is fast, 150 is slow
@@ -199,7 +199,7 @@ def get_book_files(book_name):
     mp3_files = sorted([
         os.path.join(book_path, f)
         for f in os.listdir(book_path)
-        if f.endswith(".mp3")
+        if f.endswith(".mp3") and not f.startswith("._")
     ])
     
     return mp3_files, author, title
@@ -332,7 +332,7 @@ def arrow_key_pushed(direction):
         if switch_a.value == 1:
             speak("Välj bok. Nuvarande bok är: " + state["current_book"])
         else:
-            speak("Välj del. Nuvarande del är: " + str(state["books"][state["current_book"]]["current_file"] + 1))
+            speak("Välj kapitel. Nuvarande kapitel är: " + str(state["books"][state["current_book"]]["current_file"] + 1))
  
 
 def play_next():
@@ -388,7 +388,7 @@ def change_chapter(direction):
     book_state["position"] = 0
     start_time = 0
     current_file = book_files[book_state["current_file"]]
-    speak("Del " + str(book_state["current_file"] + 1))
+    speak("Kapitel " + str(book_state["current_file"] + 1))
 
     save_state(state)
 
