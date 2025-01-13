@@ -47,7 +47,7 @@ Wants=sound.target
 
 [Service]
 ExecStartPre=/bin/mkdir -p /mnt/sdcard
-ExecStartPre=/bin/mount -o uid=1000,gid=1000,umask=0022 /dev/mmcblk0p3 /mnt/sdcard
+ExecStartPre=/bin/bash -c 'mountpoint -q /mnt/sdcard || /bin/mount -o uid=1000,gid=1000,umask=0022 /dev/mmcblk0p3 /mnt/sdcard'
 ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
 WorkingDirectory=$SCRIPT_DIR
 Restart=always

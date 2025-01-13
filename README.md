@@ -129,12 +129,9 @@ Make the setup script executable and run it
 The setup script creates a service that loads the easy_reader python script. It is set to auto run when the pi is booted. 
 
 #### Configure audio
-You might need to change the adress of the USB audio card:
-First lookup the id of your USB audio device using 
-`aplay -l`
 
 Then open the easy_reader.service:
-`sudo nano /etc/systemd/system/easyreader.service``
+`sudo nano /etc/systemd/system/easy_reader.service``
 
 and edit the line where the audio device is specified
 `Environment="AUDIODEV=hw:2,0" `
