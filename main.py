@@ -20,17 +20,8 @@ from gpiozero import Button, DigitalInputDevice, LED
 import subprocess
 import tempfile
 
-# Constants
-#AUDIO_FOLDER = "/home/admin/easyreader/audiobooks"  # Use a local folder in the project for MP3s
-#STATE_FILE = "/home/admin/easyreader/playback_state.json"  # Save playback state locally
 
-SD_CARD_PATH = "/media/admin/CF2B-FA41"  # Path to SD card (FAT32 partition) (update as necessary)
-AUDIO_FOLDER = os.path.join(SD_CARD_PATH, "audiobooks")  # Audiobooks are stored here
-STATE_FILE = os.path.join(SD_CARD_PATH, "playback_state.json")  # Progress state file
-
-TEMP_DIR = tempfile.gettempdir()  # Temporary directory for generated audio files
-REWIND_TIME = 5  # Seconds (adjust as needed)
-PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
+SD_CARD_PATH = "/mnt/sd"  # Path to SD card (FAT32 partition) (update as necessary)
 
 # SETTINGS
 TTS_SPEED = 120 # Speed for the speech syntesis. 200 is fast, 150 is slow
@@ -46,6 +37,18 @@ PREV_BUTTON_PIN = 22
 LED_PIN = 18
 
 SWITCH_PIN_A = 23
+
+# Paths
+AUDIO_FOLDER = os.path.join(SD_CARD_PATH, "audiobooks")  # Audiobooks are stored here
+STATE_FILE = os.path.join(SD_CARD_PATH, "playback_state.json")  # Progress state file
+
+TEMP_DIR = tempfile.gettempdir()  # Temporary directory for generated audio files
+REWIND_TIME = 5  # Seconds (adjust as needed)
+PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
+
+# Constants
+#AUDIO_FOLDER = "/home/admin/easyreader/audiobooks"  # Use a local folder in the project for MP3s
+#STATE_FILE = "/home/admin/easyreader/playback_state.json"  # Save playback state locally
 
 # Initialize hardware
 
@@ -298,6 +301,7 @@ def play_pause():
         start_time = book_state["position"]
         start_position = max(0, book_state["position"]-REWIND_TIME)  # Start slightly earlier
         # Load the current file and play it from the saved position
+        print(f"Attempting to load: {current_file}")
         mixer.music.load(current_file)         
         mixer.music.play(start=start_position)
         # Set the is_playing flag to True

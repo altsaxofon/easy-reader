@@ -46,6 +46,8 @@ After=sound.target
 Wants=sound.target
 
 [Service]
+ExecStartPre=/bin/mkdir -p /mnt/sdcard
+ExecStartPre=/bin/mount /dev/mmcblk0p1 /mnt/sdcard
 ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
 WorkingDirectory=$SCRIPT_DIR
 Restart=always
@@ -54,8 +56,8 @@ Group=$USER
 Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
 Environment="SDL_AUDIODRIVER=alsa"
-# Replace 1,0 with the USB audio card numbers from `aplay -l`
-# Environment="AUDIODEV=hw:1,0" 
+# Replace 1,0 with the USB audio card numbers from aplay -l
+# Environment="AUDIODEV=hw:0,0" 
 StandardOutput=journal
 StandardError=journal
 
