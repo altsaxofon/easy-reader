@@ -162,9 +162,10 @@ It will auto run when the pi is booted.
 #### Run Easyreader from terminal
 If the software is not working it can be a good idea to run `main.py` from the terminal to see any error messages.
 
-First stop the service, if it is runnning
+First stop the service and reload
 ```
 sudo systemctl stop easy_reader.service
+sudo systemctl daemon-reload
 ```
 
 Next mount the Fat32 partition as `sdcard` 

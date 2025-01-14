@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """main.py: Easy reader application."""
 
@@ -75,6 +76,7 @@ button_led = LED(LED_PIN)  # Create an LED object for GPIO 18
 # Initialize hardware callbacks
 
 def button_play_callback():
+    global is_generating
     if is_generating:
         print("TTS generation in progress. Please wait.")
         return
@@ -85,6 +87,8 @@ def button_play_callback():
     play_pause() 
 
 def button_next_callback():
+    global is_generating
+
     if is_generating:
         print("TTS generation in progress. Please wait.")
         return
@@ -92,6 +96,8 @@ def button_next_callback():
     arrow_key_pushed(1)
 
 def button_prev_callback():
+    global is_generating
+
     if is_generating:
         print("TTS generation in progress. Please wait.")
         return
@@ -99,6 +105,8 @@ def button_prev_callback():
     arrow_key_pushed(-1)
 
 def switch_callback():
+    global is_generating
+
     if is_generating:
         print("TTS generation in progress. Please wait.")
         return
@@ -141,7 +149,7 @@ def speak(text, speak_audio=True, ):
         raise ValueError("Dimits object 'dt' is required.")
 
     # Generate a safe filename for the WAV file (without list wrapping or duplicated extensions)
-    filename = text.replace(" ", "_").replace("ä", "a").replace("å", "a").replace("ö", "o").lower()
+    filename = text.replace(" ", "_").replace(",", "").replace("ä", "a").replace("å", "a").replace("ö", "o").lower()
     filename_wav = f"{filename}.wav"
     filepath = os.path.join("/home/pi/voice/", filename_wav)
 
@@ -151,7 +159,13 @@ def speak(text, speak_audio=True, ):
         if not os.path.exists(filepath):
             # If the file doesn't exist, generate it
             print(f"Generating audio file for: {text}")
-            dt.text_2_audio_file(text, filename, "/home/pi/voice/", format="wav")
+            try:
+                print(f"Calling text_2_audio_file with text: {text}")
+                dt.text_2_audio_file(text, filename, "/home/pi/voice/", format="wav")
+                print("Audio file generated successfully.")
+            except Exception as e:
+                print(f"Error in text_2_audio_file(): {e}")
+                raise  # Re-raise the error for further handling
         else:
             print(f"Audio file for '{text}' already exists.")
 
@@ -184,25 +198,19 @@ def pre_generate_tts():
     # Start blinking LED in a separate thread to avoid blocking
 
     # Generate the TTS phrases
-    button_led.off()
 
     try:
         for phrase in PHRASES.values():
-            button_led.on()
             speak(phrase, speak_audio=False)  # Generate TTS without speaking it
-            button_led.off()
 
         for chapter_num in range(1, 101):
             button_led.on()
             chapter_phrase = f"{PHRASES['chapter']} {chapter_num}"
             speak(chapter_phrase, speak_audio=False)  # Generate TTS for chapter titles
-            button_led.off()
 
         for book_name in state["books"]:
-            button_led.on()
             author, title = get_author_and_title(book_name)
             speak(title+" "+PHRASES['by']+" "+author, speak_audio=False)
-            button_led.off()
 
     except Exception as e:
         print(f"Error during TTS pre-generation: {e}")
@@ -210,8 +218,6 @@ def pre_generate_tts():
         print("pre generation done")
         is_generating = False
         button_led.off()  # Ensure the LED is turned off after pre-generation is done
-
-        button_led.off()  # Turn off the LED when done
 
 # Helper function to clean up temporary files
 def cleanup_tts_file():
@@ -447,8 +453,8 @@ def play_next():
         book_state = state["books"][state["current_book"]]
         book_state["current_file"] = 0  # Start from the first file of the new book
 
-        speak(f"Byter till nästa bok: {state['current_book']}. Tryck på knappen för att fortsätta")
-        play_pause()  # Pause playback after changing the book
+        speak(PHRASES["the_end_of_book"])
+        #play_pause()  # Pause playback after changing the book
 
     # Reset position for the new file and play it
     book_state["position"] = 0
