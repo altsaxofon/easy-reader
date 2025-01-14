@@ -170,7 +170,7 @@ sudo systemctl stop easy_reader.service
 Next mount the Fat32 partition as `sdcard` 
 ```
 sudo  /bin/mount -o uid=1000,gid=1000,umask=0022 /dev/mmcblk0p3 /mnt/sdcard
-``
+```
 
 Run Easy reader (`main.py`)
 ```
