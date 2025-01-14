@@ -159,19 +159,26 @@ It will auto run when the pi is booted.
 
 
 ### Not working?
-If the software is not working it can be a good idea to activate the virtual environment and run the `main.py` from the terminal to see any error messages.
+#### Run Easyreader from terminal
+If the software is not working it can be a good idea to run `main.py` from the terminal to see any error messages.
+
+First stop the service, if it is runnning
+```
+sudo systemctl stop easy_reader.service
+```
+
+Next mount the Fat32 partition as `sdcard` 
+```
+sudo  /bin/mount -o uid=1000,gid=1000,umask=0022 /dev/mmcblk0p3 /mnt/sdcard
+``
+
+Run Easy reader (`main.py`)
 ```
 /home/pi/easy_reader/easyreader_ve/bin/python /home/pi/easy_reader/main.py
 ```
 *assuming `pi`is the username*
 
-It might be neccecary to stop the service first using the command
-
-
-```
-sudo systemctl stop easy_reader.service
-```
-
+#### Look at the logs from easy_reader.service
 If the script is working from the terminal but not on boot it can be helpful to look at the log for the easy_reader.service with the command.
 
 ```
