@@ -46,14 +46,24 @@ After=sound.target
 Wants=sound.target
 
 [Service]
+# Mount the auduiobook partition 
 ExecStartPre=/bin/mkdir -p /mnt/sdcard
-ExecStartPre=/bin/bash -c 'mountpoint -q /mnt/sdcard || /bin/mount -o uid=1000,gid=1000,umask=0022 /dev/mmcblk0p3 /mnt/sdcard'
+ExecStartPre=/bin/bash -c 'mountpoint -q /mnt/sdcard || /bin/mount -o uid=1000,gid=1000,umask=0022,iocharset=utf8 /dev/mmcblk0p3 /mnt/sdcard'
+
+# Set the speaker volume to 90% (100% will cause distortion i think)
+ExecStartPre=/usr/bin/amixer sset 'Speaker' 90%
+
+# Start the python script
 ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
+
 WorkingDirectory=$SCRIPT_DIR
 Restart=always
 
 Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
+Environment="PYTHONUNBUFFERED=1"
+Environment="DEBUG=1"
+
 Environment="SDL_AUDIODRIVER=alsa"
 # Environment="AUDIODEV=hw:0,0" 
 StandardOutput=journal

@@ -34,7 +34,11 @@ Restart=always
 
 Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
+Environment="PYTHONUNBUFFERED=1"
+Environment="DEBUG=1"
+
 Environment="SDL_AUDIODRIVER=alsa"
+
 # Environment="AUDIODEV=hw:0,0" 
 StandardOutput=journal
 StandardError=journal
