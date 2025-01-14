@@ -62,7 +62,11 @@ All audiobooks are stored in the directory /audiobooks/ on the Fat32 partition o
 The player stores a list of books and listening progress in a json encoded txt file on the SD card. The player will scan the /audiobooks/ directory and add or remove books from the registry to reflect any changes in the folder. To add or remove a book, just add or remove a folder in the SD-card. 
 
 #### Listening
+The reader takes about 30 seconds to to power on. The button will blink three times to indicate 
+
+that it is ready for playback. 
 Pushing the play / pause button will play or pause the playback of the audiobook. When playback resumes the player rewinds 15 seconds for a small recap. The number of esonds can be changed in `main.py`
+
 During playback the progress will be coninuasly saved to a text file on the SD card of the player.
 
 When an audiobook is finished the progress of the book will be reset and the playback will stop. The title of next audiobook on the SD-card will be read out loud by the speech synthesis, informing the user to push the play button to begin to listen to it.  

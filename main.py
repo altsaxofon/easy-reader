@@ -35,7 +35,8 @@ PHRASES = {
     "choose_book": "Välj bok",
     "choose_capter": "Välj del",
     "chapter": "Del",
-    "by": "av"
+    "by": "av",
+    "the_end_of_book" : "Boken är slut, tryck på knappen för att påbörja nästa bok"
     }
 
 
@@ -61,10 +62,6 @@ STATE_FILE = os.path.join(SD_CARD_PATH, "playback_state.json")  # Progress state
 REWIND_TIME = 5  # Seconds (adjust as needed)
 PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 
-# Global variables to control the LED blinking
-blinking = False
-
-
 # Initialize hardware
 
 button_play = Button(PLAY_BUTTON_PIN, pull_up=True, bounce_time=0.03)  
@@ -78,18 +75,34 @@ button_led = LED(LED_PIN)  # Create an LED object for GPIO 18
 # Initialize hardware callbacks
 
 def button_play_callback():
+    if is_generating:
+        print("TTS generation in progress. Please wait.")
+        return
+    
     global settings_mode
     if settings_mode:
         settings_mode = False
     play_pause() 
 
 def button_next_callback():
+    if is_generating:
+        print("TTS generation in progress. Please wait.")
+        return
+    
     arrow_key_pushed(1)
 
 def button_prev_callback():
+    if is_generating:
+        print("TTS generation in progress. Please wait.")
+        return
+    
     arrow_key_pushed(-1)
 
 def switch_callback():
+    if is_generating:
+        print("TTS generation in progress. Please wait.")
+        return
+    
     arrow_key_pushed(0)
 
 
@@ -108,11 +121,15 @@ mixer.init()
 # Blink the LED 
 def blink_led():
     button_led.on()
-    time.sleep(0.5)  # LED on for 0.5 seconds
+    time.sleep(0.3)  # LED on for 0.5 seconds
     button_led.off()
-    time.sleep(0.5)  # LED off for 0.5 seconds
+    time.sleep(0.2)  # LED off for 0.5 seconds
     button_led.on()
-    time.sleep(0.5)  # LED on for 0.5 seconds
+    time.sleep(0.3)  # LED on for 0.5 seconds
+    button_led.off()
+    time.sleep(0.2)  # LED off for 0.5 seconds
+    button_led.on()
+    time.sleep(0.3)  # LED on for 0.5 seconds
     button_led.off()
 
 
@@ -157,34 +174,44 @@ def speak(text, speak_audio=True, ):
 
 
 def pre_generate_tts():
-    """Pre-generate TTS phrases and blink LED while doing so."""
-    # Suspend other app functionality (e.g., music)
+    """Pre-generate TTS."""
+    global is_generating
+    button_led.on()
+    
+    is_generating = True    
     global state
 
     # Start blinking LED in a separate thread to avoid blocking
-    blink_thread = threading.Thread(target=blink_led)
-    blink_thread.start()
 
     # Generate the TTS phrases
+    button_led.off()
+
     try:
         for phrase in PHRASES.values():
+            button_led.on()
             speak(phrase, speak_audio=False)  # Generate TTS without speaking it
+            button_led.off()
 
         for chapter_num in range(1, 101):
+            button_led.on()
             chapter_phrase = f"{PHRASES['chapter']} {chapter_num}"
             speak(chapter_phrase, speak_audio=False)  # Generate TTS for chapter titles
+            button_led.off()
 
         for book_name in state["books"]:
+            button_led.on()
             author, title = get_author_and_title(book_name)
             speak(title+" "+PHRASES['by']+" "+author, speak_audio=False)
+            button_led.off()
 
     except Exception as e:
         print(f"Error during TTS pre-generation: {e}")
     finally:
         print("pre generation done")
+        is_generating = False
+        button_led.off()  # Ensure the LED is turned off after pre-generation is done
 
-        # Allow the rest of the app to resume
-        is_playing = True
+        button_led.off()  # Turn off the LED when done
 
 # Helper function to clean up temporary files
 def cleanup_tts_file():
@@ -310,7 +337,7 @@ start_time = 0
 settings_mode = False
 speech_sound = None  # Holds the pygame Sound object for TTS playback
 speech_file = None  # Current temporary TTS file
-
+is_generating = False
 
 
 def play_pause():
@@ -320,6 +347,12 @@ def play_pause():
     global start_time
     global settings_mode
     global speech_sound
+    global is_generating
+
+    if is_generating:
+        print("TTS generation in progress. Please wait.")
+        return
+
     current_book = state["current_book"]  # Now referencing by folder name
     if current_book == "":
         print("Error: No current book selected.")
