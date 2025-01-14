@@ -37,6 +37,8 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 |                    | Rocker switch On-On 2-position                                                                              | [Electrokit](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | TBD       |
 
 
+
+
 ### Wiring diagram
 
 ![wiring](https://github.com/user-attachments/assets/e9837eb8-c2be-41e9-ae5c-0bdf428fd56c)
@@ -53,6 +55,9 @@ This is how i connected my components to the Raspberry Pi Zero.
 | Rocker switch     | GPIO**23**      |
 
 The pin numbers are defined in `main.py`, change them if you want to use other pins.
+
+*The prototype was made on a breadboard*
+
 
 ## Software
 ### How to use
