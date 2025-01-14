@@ -132,20 +132,27 @@ I set up file sharing with samba using the description [here](https://subscripti
 
 #### Download and setup
 Install git and download Easyreader (or copy it over to the PI some other way)
-`sudo apt install git`
-`git clone https://github.com/altsaxofon/easy_reader.git`
+```
+sudo apt install git
+git clone https://github.com/altsaxofon/easy_reader.git
+```
 
 Navigate to the easy reader directory
-`cd easy_reader/`
+```
+cd easy_reader/
+```
 
 Make the setup script executable and run it
-`chmod +x setup.sh`
-`./setup.sh`
+```
+chmod +x setup.sh
+./setup.sh
+```
 
-The setup script creates a service that mounts the fat32 partition and loads the easy_reader python script. It will auto run when the pi is booted. 
+The setup script creates a service that mounts the fat32 partition and loads the easy_reader python script in it's virtual environment. 
+It will auto run when the pi is booted. 
 
 > [!NOTE]
->The first time the easyreader boots it will generate wav files for the speech wynthesis, and this might take som time 
+>The first time the easyreader boots it will generate wav files for the speech synthesis, and this might take som time (10+ minutes)
 
 ### 3. Configure Easyreader
 
