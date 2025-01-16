@@ -32,6 +32,10 @@ ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
 WorkingDirectory=$SCRIPT_DIR
 Restart=always
 
+ExecStartPre=/bin/bash -c "env > /tmp/env_output.txt"
+ExecStartPre=/bin/bash -c "pip freeze > /tmp/pip_freeze.txt"
+
+Environment="VIRTUAL_ENV=$VENV_DIR"
 Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
 Environment="PYTHONUNBUFFERED=1"
