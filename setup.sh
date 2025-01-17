@@ -54,15 +54,15 @@ ExecStartPre=/bin/bash -c 'mountpoint -q /mnt/sdcard || /bin/mount -o uid=1000,g
 ExecStartPre=/usr/bin/amixer sset 'Speaker' 90%
 
 # Start the python script
-ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
+#ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
 
 WorkingDirectory=$SCRIPT_DIR
 Restart=always
 
-Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
+#Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
-Environment="PYTHONUNBUFFERED=1"
-Environment="DEBUG=1"
+#Environment="PYTHONUNBUFFERED=1"
+#Environment="DEBUG=1"
 
 Environment="SDL_AUDIODRIVER=alsa"
 # Environment="AUDIODEV=hw:0,0" 

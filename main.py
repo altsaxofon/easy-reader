@@ -167,7 +167,8 @@ def speak(text, speak_audio=True, ):
                 print(f"Error in text_2_audio_file(): {e}")
                 raise  # Re-raise the error for further handling
         else:
-            print(f"Audio file for '{text}' already exists.")
+            #print(f"Audio file for '{text}' already exists.")
+            pass
 
         if speak_audio:
             # If the flag is True, play the generated audio file
@@ -181,7 +182,8 @@ def speak(text, speak_audio=True, ):
             speech_sound = mixer.Sound(filepath)
             speech_sound.play()
         else:
-            print(f"Pre-generated WAV for '{text}' is ready but not spoken.")
+            #print(f"Pre-generated WAV for '{text}' is ready but not spoken.")
+            pass
 
     except Exception as e:
         print(f"Error in speak(): {e}")
