@@ -124,7 +124,6 @@ dt = Dimits(TTS_MODEL, modelDirectory=TTS_MODEL_PATH) # TTS library
 
 # Runtime variables
 
-state = load_books()  # Load and update the book list
 is_playing = False  # Default to not playing at startup
 start_time = 0 
 settings_mode = False
@@ -530,6 +529,9 @@ print("Starting Easy Reader")
 
 # Create directories if they not exist
 ensure_directories()
+
+# Load books into state
+state = load_books()  # Load and update the book list
 
 # Blink led to indicate startup
 blink_led()
