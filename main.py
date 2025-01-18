@@ -17,6 +17,8 @@ from gpiozero import Button, DigitalInputDevice, LED
 from dimits import Dimits
 from pathlib import Path
  
+import books
+
 # Settings 
 
 REWIND_TIME = 5  # The amount of seconds the player will rewind / recap on play
