@@ -16,7 +16,7 @@ from mutagen.mp3 import MP3
 from gpiozero import Button, DigitalInputDevice, LED
 from dimits import Dimits
 from pathlib import Path
-
+ 
 # Settings 
 
 REWIND_TIME = 5  # The amount of seconds the player will rewind / recap on play
@@ -70,52 +70,32 @@ button_led = LED(LED_PIN)  # Create an LED object for GPIO 18
 
 # Initialize hardware callbacks
 
-def button_play_callback():
+def hardware_callback(button_type):
     global is_generating
-    if is_generating:
-        print("TTS generation in progress. Please wait.")
-        return
-    
     global settings_mode
-    if settings_mode:
+
+    if is_generating:
+        print("TTS generation in progress. Please wait.")
+        return
+    
+    if button_type == "play":
         settings_mode = False
-    play_pause() 
-
-def button_next_callback():
-    global is_generating
-
-    if is_generating:
-        print("TTS generation in progress. Please wait.")
-        return
-    
-    arrow_key_pushed(1)
-
-def button_prev_callback():
-    global is_generating
-
-    if is_generating:
-        print("TTS generation in progress. Please wait.")
-        return
-    
-    arrow_key_pushed(-1)
-
-def switch_callback():
-    global is_generating
-
-    if is_generating:
-        print("TTS generation in progress. Please wait.")
-        return
-    
-    arrow_key_pushed(0)
+        play_pause() 
+    elif button_type == "next":
+        arrow_key_pushed(1)
+    elif button_type == "prev":
+        arrow_key_pushed(-1)
+    elif button_type == "switch":
+        arrow_key_pushed(0)
 
 
 # Attach the callback function to the button press event
-button_play.when_pressed = button_play_callback
-button_next.when_pressed = button_next_callback
-button_prev.when_pressed = button_prev_callback
+button_play.when_pressed = lambda: hardware_callback('play')
+button_next.when_pressed = lambda: hardware_callback('next')
+button_prev.when_pressed = lambda: hardware_callback('prev')
 
-switch_a.when_activated = switch_callback
-switch_a.when_deactivated = switch_callback
+switch_a.when_activated = lambda: hardware_callback('switch')
+switch_a.when_deactivated = lambda: hardware_callback('switch')
 
 # INITIATE MIXER AND TTS
 
