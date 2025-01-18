@@ -159,8 +159,23 @@ It will auto run when the pi is booted.
 
 
 ### Not working?
+
+#### Look at the logs from easy_reader.service
+It can be helpful to look at the log for the easy_reader.service with the command.
+
+```
+journalctl -u easy_reader.service -b
+```
+
+For example, the service could be trying to mount the wrong `Fat32`partition.
+You can open and edit the service with the command
+
+```
+sudo nano /etc/systemd/system/easy_reader.service
+```
+
 #### Run Easyreader from terminal
-If the software is not working it can be a good idea to run `main.py` from the terminal to see any error messages.
+Another debuging strategy is to run `main.py` from the terminal to see any error messages.
 
 First stop the service and reload
 ```
@@ -179,19 +194,6 @@ Run Easy reader (`main.py`)
 ```
 *assuming `pi`is the username*
 
-#### Look at the logs from easy_reader.service
-If the script is working from the terminal but not on boot it can be helpful to look at the log for the easy_reader.service with the command.
-
-```
-journalctl -u easy_reader.service -b
-```
-
-For example, the service could be trying to mount the wrong `Fat32`partition.
-You can open and edit the service with the command
-
-```
-sudo nano /etc/systemd/system/easy_reader.service
-```
 
 
 ## Software
