@@ -17,9 +17,16 @@ from gpiozero import Button, DigitalInputDevice, LED
 from dimits import Dimits
 from pathlib import Path
  
-import books
+from books import Books
+
+# Initiate classes
+
+books = Books()
+
 
 # Settings 
+
+
 
 REWIND_TIME = 5  # The amount of seconds the player will rewind / recap on play
 PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
@@ -215,8 +222,8 @@ def pre_generate_tts():
         
         # Pre-generate TTS for chapter enumerations based on number of books files
         max_chapters = 0
-        for book_name in state["books"]:
-            book_files, author, title = get_book_files(book_name)
+        for book_name in books.get_books():
+            book_files, author, title = books.get_file_list(book_name)
             max_chapters = max(max_chapters, len(book_files))
 
         # Pre-generate TTS for chapters based on the maximum number of chapters
@@ -357,7 +364,7 @@ def play_pause():
     if current_book == "":
         print("Error: No current book selected.")
         return
-    book_files, author, title = get_book_files(current_book)
+    book_files, author, title = books.get_file_list(current_book)
  
  # Get current book's state (position and current_file)
     book_state = state["books"][current_book]
@@ -430,7 +437,7 @@ def play_next():
     global settings_mode
 
     current_book = state["current_book"]
-    book_files, author, title = get_book_files(current_book)
+    book_files, author, title = books.get_file_list(current_book)
 
     # Get the current file index and update to the next one
     book_state = state["books"][current_book]
@@ -461,7 +468,7 @@ def play_next():
 def change_chapter(direction):
 
     current_book = state["current_book"]
-    book_files, author, title = get_book_files(current_book)
+    book_files, author, title = books.get_file_list(current_book)
     book_state = state["books"][current_book]
 
     book_state["current_file"] += direction
