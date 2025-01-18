@@ -22,6 +22,7 @@ from books import Books
 # Initiate classes
 
 books = Books()
+# test the new class
 print(books.get_books())
 
 
