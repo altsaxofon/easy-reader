@@ -66,7 +66,7 @@ ExecStartPre=/bin/bash -c 'mountpoint -q /mnt/sdcard || /bin/mount -o uid=1000,g
 ExecStartPre=/usr/bin/amixer sset 'Speaker' 90%
 
 # Start the python script
-#ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
+ExecStart=$VENV_DIR/bin/python $SCRIPT_DIR/main.py
 
 WorkingDirectory=$SCRIPT_DIR
 Restart=always

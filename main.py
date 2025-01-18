@@ -48,6 +48,7 @@ TTS_FILES_PATH = Path(HOME_DIR) / "voice"
 # FILES
 STATE_FILE = Path(SD_CARD_PATH) / "playback_state.json"  # Progress state file
 
+
 # PIN definitions
 PLAY_BUTTON_PIN = 17
 NEXT_BUTTON_PIN = 27
@@ -115,6 +116,12 @@ button_prev.when_pressed = button_prev_callback
 
 switch_a.when_activated = switch_callback
 switch_a.when_deactivated = switch_callback
+
+# INITIATE MIXER AND TTS
+
+mixer.init() # Audio playback mixer
+dt = Dimits(TTS_MODEL, modelDirectory=TTS_MODEL_PATH) # TTS library
+
 
 # Helper functions
 
@@ -527,12 +534,6 @@ print("Starting Easy Reader")
 
 # Create directories if they not exist
 ensure_directories()
-
-# Audio playback mixer
-mixer.init()
-
-# TTS library
-dt = Dimits(TTS_MODEL, modelDirectory=TTS_MODEL_PATH)
 
 # Blink led to indicate startup
 blink_led()
