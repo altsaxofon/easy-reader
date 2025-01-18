@@ -1,37 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Todo:
+# Implement a settings JSON file stored on the Fat32 partition
+
 """main.py: Easy reader application."""
 
 __author__      = "Erik Arnell"
 
-# TODO
-# use python espeak-ng library instead of subprocess
-
-# Add proper support for PIPER TTS as an alternative to espeak-ng (is it to slow - can we generate and store wavs instead)
-# Remove the need to specify paths in the code, make the paths relative to the application.
-# Add support for translation of TTS 
-
 import os
 import time
-import threading
 import json
 from pygame import mixer
 from mutagen.mp3 import MP3 
 from gpiozero import Button, DigitalInputDevice, LED
-import subprocess
-import tempfile
 from dimits import Dimits
+from pathlib import Path
 
+# Settings 
 
-SD_CARD_PATH = "/mnt/sdcard"  # Path to SD card (FAT32 partition) (update as necessary)
+REWIND_TIME = 5  # The amount of seconds the player will rewind / recap on play
+PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 
-# TTS SETTINGS
-# Initialize Dimits with the desired voice model
+TTS_MODEL = "sv_SE-nst-medium" # TTS voice model - for english use e.g. 'en_GB-alba-medium'
 
-dt = Dimits("sv_SE-nst-medium")
-
-# Phrases
+# Phrases used by the TTS. If translated, use a voice model of correct language 
 PHRASES = {
     "choose_book": "Välj bok",
     "choose_capter": "Välj del",
@@ -40,11 +33,20 @@ PHRASES = {
     "the_end_of_book" : "Boken är slut, tryck på knappen för att påbörja nästa bok"
     }
 
+# Paths
 
-TTS_SPEED = 120 # Speed for the speech syntesis. 200 is fast, 150 is slow
-USE_PIPER = False  # Set to True to use the piper TTS tool
+# Since our service run as SUDO we need to identify the home folder by looking at the dir of this script
+# This is a bit hacky - better solution should be found
+HOME_DIR = Path(__file__).resolve().parent.parent
+SD_CARD_PATH = "/mnt/sdcard"  # Path to SD card (FAT32 partition) (update as necessary)
 
-os.environ["PATH"] = os.environ["PATH"] + ":/home/admin/easyreader"
+AUDIO_FOLDER = Path(SD_CARD_PATH) / "audiobooks"  # Audiobooks are stored here
+
+TTS_MODEL_PATH = Path(HOME_DIR) / "piper"
+TTS_FILES_PATH = Path(HOME_DIR) / "voice"
+
+# FILES
+STATE_FILE = Path(SD_CARD_PATH) / "playback_state.json"  # Progress state file
 
 # PIN definitions
 PLAY_BUTTON_PIN = 17
@@ -54,14 +56,6 @@ PREV_BUTTON_PIN = 22
 LED_PIN = 18
 
 SWITCH_PIN_A = 23
-
-# Paths
-
-AUDIO_FOLDER = os.path.join(SD_CARD_PATH, "audiobooks")  # Audiobooks are stored here
-STATE_FILE = os.path.join(SD_CARD_PATH, "playback_state.json")  # Progress state file
-
-REWIND_TIME = 5  # Seconds (adjust as needed)
-PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 
 # Initialize hardware
 
@@ -122,44 +116,55 @@ button_prev.when_pressed = button_prev_callback
 switch_a.when_activated = switch_callback
 switch_a.when_deactivated = switch_callback
 
-mixer.init()
-
 # Helper functions
 
+# Ensure all required directories exist
+def ensure_directories():
+    directories = [
+        AUDIO_FOLDER, 
+        TTS_MODEL_PATH, 
+        TTS_FILES_PATH
+    ]
+    
+    for directory in directories:
+        if not directory.exists():
+            print(f"Directory {directory} does not exist. Creating it...")
+            directory.mkdir(parents=True, exist_ok=True)  # Create the directory, including parents if necessary
+
 # Blink the LED 
-def blink_led():
-    button_led.on()
-    time.sleep(0.3)  # LED on for 0.5 seconds
-    button_led.off()
-    time.sleep(0.2)  # LED off for 0.5 seconds
-    button_led.on()
-    time.sleep(0.3)  # LED on for 0.5 seconds
-    button_led.off()
-    time.sleep(0.2)  # LED off for 0.5 seconds
-    button_led.on()
-    time.sleep(0.3)  # LED on for 0.5 seconds
-    button_led.off()
+def blink_led(times=3, leaveOn = False):
 
+    button_led.off() #Turn of led if on
 
+    for i in range(times):  # Start from 0 to times-1
+        button_led.on()
+        time.sleep(0.3)  # LED on for 0.3 seconds
+        button_led.off()
+        time.sleep(0.2)  # LED off for 0.2 seconds
+    
+    if leaveOn:
+        button_led.on()
+        
 def speak(text, speak_audio=True, ):
     global speech_sound, speech_file
     global dt
-    # Ensure that dt is passed if needed
+ 
+    # Ensure that dt (the TTS library) is initialized
     if dt is None:
         raise ValueError("Dimits object 'dt' is required.")
 
-    # Generate a safe filename for the WAV file (without list wrapping or duplicated extensions)
+    # Generate a safe filename for the WAV file 
     filename = text.replace(" ", "_").replace(",", "").replace("ä", "a").replace("å", "a").replace("ö", "o").lower()
     filename_wav = f"{filename}.wav"
-    filepath = os.path.join("/home/pi/voice/", filename_wav)
+    filepath =  Path(TTS_FILES_PATH) / filename_wav
 
     try:
         # Check if the file exists
-        print(filepath)
-        if not os.path.exists(filepath):
+        if not filepath.exists() or filepath.stat().st_size == 0:
             # If the file doesn't exist, generate it
             print(f"Generating audio file for: {text}")
             try:
+                blink_led(2, leaveOn = True)
                 print(f"Calling text_2_audio_file with text: {text}")
                 dt.text_2_audio_file(text, filename, "/home/pi/voice/", format="wav")
                 print("Audio file generated successfully.")
@@ -192,24 +197,36 @@ def speak(text, speak_audio=True, ):
 def pre_generate_tts():
     """Pre-generate TTS."""
     global is_generating
-    button_led.on()
-    
-    is_generating = True    
     global state
 
-    # Start blinking LED in a separate thread to avoid blocking
+    print("Pre-generating TTS")
+
+
+    # Turn on the LED to indicate TTS generation
+    button_led.on()
+    # Set the flag to indicate TTS generation is in progress
+    is_generating = True    
+
 
     # Generate the TTS phrases
 
     try:
+        # Pre-generate TTS for all phrases
         for phrase in PHRASES.values():
             speak(phrase, speak_audio=False)  # Generate TTS without speaking it
+        
+        # Pre-generate TTS for chapter enumerations based on number of books files
+        max_chapters = 0
+        for book_name in state["books"]:
+            book_files, author, title = get_book_files(book_name)
+            max_chapters = max(max_chapters, len(book_files))
 
-        for chapter_num in range(1, 101):
-            button_led.on()
+        # Pre-generate TTS for chapters based on the maximum number of chapters
+        for chapter_num in range(1, max_chapters + 1):
             chapter_phrase = f"{PHRASES['chapter']} {chapter_num}"
             speak(chapter_phrase, speak_audio=False)  # Generate TTS for chapter titles
 
+        # Pre-generate TTS for book titles
         for book_name in state["books"]:
             author, title = get_author_and_title(book_name)
             speak(title+" "+PHRASES['by']+" "+author, speak_audio=False)
@@ -217,18 +234,9 @@ def pre_generate_tts():
     except Exception as e:
         print(f"Error during TTS pre-generation: {e}")
     finally:
-        print("pre generation done")
+        print("Pre generation of TTS finnished")
         is_generating = False
         button_led.off()  # Ensure the LED is turned off after pre-generation is done
-
-# Helper function to clean up temporary files
-def cleanup_tts_file():
-    global speech_file
-    if speech_file and os.path.exists(speech_file):
-        os.remove(speech_file)
-        speech_file = None
-        print("Temporary TTS file cleaned up.")
-
 
 def load_state():
     if not os.path.exists(STATE_FILE):
@@ -512,6 +520,19 @@ def change_book(direction):
 
 # Main loop
 
+# Initate libraries
+
+
+print("Starting Easy Reader")
+
+# Create directories if they not exist
+ensure_directories()
+
+# Audio playback mixer
+mixer.init()
+
+# TTS library
+dt = Dimits(TTS_MODEL, modelDirectory=TTS_MODEL_PATH)
 
 # Blink led to indicate startup
 blink_led()

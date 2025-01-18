@@ -1,6 +1,7 @@
 #!/bin/bash
-
+echo "---"
 echo "EasyReader Setup Script"
+echo "---"
 
 # Get the current user dynamically
 USER=$(whoami)
@@ -9,10 +10,16 @@ USER=$(whoami)
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 # Update and install dependencies (only the ones that are necessary)
+echo "---"
 echo "Updating system and installing dependencies..."
+echo "---"
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3 python3-pip python3-venv espeak-ng mpg123
 sudo usermod -aG audio $USER  # 
+
+echo "---"
+echo "Setting up virtual environment"
+echo "---"
 
 # Create virtual environment inside the script directory (only if it doesn't already exist)
 VENV_DIR="$SCRIPT_DIR/easyreader_ve"
@@ -28,7 +35,10 @@ else
 fi
 
 # Add the current user to the audio group (only if not already a member)
+echo "---"
 echo "Ensuring the user has audio permissions..."
+echo "---"
+
 if ! groups $USER | grep -q '\baudio\b'; then
     sudo usermod -aG audio $USER
 else
@@ -36,7 +46,9 @@ else
 fi
 
 # Create systemd service file
+echo "---"
 echo "Creating systemd service..."
+echo "---"
 SERVICE_FILE="/etc/systemd/system/easy_reader.service"
 
 sudo bash -c "cat > $SERVICE_FILE" <<EOL
@@ -61,7 +73,7 @@ Restart=always
 
 #Environment="PATH=$VENV_DIR/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="DISPLAY=:0"
-#Environment="PYTHONUNBUFFERED=1"
+Environment="PYTHONUNBUFFERED=1"
 #Environment="DEBUG=1"
 
 Environment="SDL_AUDIODRIVER=alsa"
@@ -74,16 +86,21 @@ WantedBy=multi-user.target
 EOL
 
 # Reload systemd to apply changes
+echo "---"
 echo "Reloading systemd and enabling service..."
+echo "---"
+
 sudo systemctl daemon-reload
 sudo systemctl enable easy_reader.service
 
 # Start the service
 echo "Starting EasyReader service..."
+echo "---"
 sudo systemctl start easy_reader.service
 
 # Check if the service is running
 echo "Checking service status..."
+echo "---"
 sudo systemctl status easy_reader.service
-
+echo "---"
 echo "Setup complete. EasyReader should now run automatically on boot."
