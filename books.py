@@ -13,19 +13,19 @@ class Books:
         book_folders = []
         
         # Iterate over all subdirectories (books) in AUDIO_FOLDER
-        for d in Path(config.AUDIO_FOLDER).iterdir():
-            if d.is_dir():  # Check if it's a directory
-                # Use get_number_of_chapters to check if the book has MP3 files
-                if self.get_number_of_chapters(d.name) > 0:
-                    book_folders.append(d.name)
+        book_folders = [
+            d.name for d in Path(config.AUDIO_FOLDER).iterdir() if d.is_dir()
+        ]
 
         return book_folders
 
-    def get_title_and_author(self, book):
+    def get_author_and_title(self, book):
         """Fetches the title and author of the book (for example purposes, assume format 'Author - Title')."""
         # Split folder na,e by -
         if book in self.books:
-            author, title = book.split("-")
+            author, title = "Unknown", book
+            if " - " in book:
+                author, title = book.split(" - ", 1)
             return author, title
         else:
             raise ValueError(f"Book {book} not found in the list of available books.")
@@ -38,7 +38,7 @@ class Books:
         else:
             raise ValueError(f"Book {book} not found in the list of available books.")
      
-    def get_file_list(self, book):
+    def get_chapters(self, book):
         """Returns the list of MP3 files for a book."""
         if book in self.books:
             # Get the path to the selected book folder
@@ -51,6 +51,17 @@ class Books:
         else:
             raise ValueError(f"Book {book} not found in the list of available books.")
 
+    def get_chapter_file(self, book, chapter):
+        if book in self.books:
+            # Validate that the chapter exists in the book, else reset chapter to 0
+            if chapter >= self.get_number_of_chapters(book):
+                # Return the filename of the MP3 of the capter
+                return self.get_chapters(book)[chapter]
+            else:
+                return self.get_chapters(book)[0]
+        else:
+            raise ValueError(f"Book {book} not found in the list of available books.")
+
     def get_path(self, book):
         if book in self.books:
             book_path = Path(config.AUDIO_FOLDER) / book
@@ -58,3 +69,10 @@ class Books:
         else:
             raise ValueError(f"Book name {book} is not found in the audio folder.")
 
+    def get_maximum_chapters(self)
+        max_chapters = 0
+        for book in self.books:
+            chapters = books.get_chapters(book)
+            max_chapters = max(max_chapters, len(chapters))
+
+books = Books()  # Create a single global instance

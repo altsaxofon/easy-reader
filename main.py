@@ -17,11 +17,14 @@ from gpiozero import Button, DigitalInputDevice, LED
 from dimits import Dimits
 from pathlib import Path
  
-from books import Books
+from books import books
+from state import State
 
 # Initiate classes
 
-books = Books()
+# A global Book instance is imported as books
+state = State() # Import a state instance
+
 # test the new class
 print(books.get_books())
 
@@ -45,6 +48,7 @@ PHRASES = {
     }
 
 # Paths
+
 
 # Since our service run as SUDO we need to identify the home folder by looking at the dir of this script
 # This is a bit hacky - better solution should be found
@@ -225,7 +229,7 @@ def pre_generate_tts():
         # Pre-generate TTS for chapter enumerations based on number of books files
         max_chapters = 0
         for book_name in state["books"]:
-            book_files, author, title = get_book_files(book_name)
+            book_files = books.get_chapters(book_name)
             max_chapters = max(max_chapters, len(book_files))
 
         # Pre-generate TTS for chapters based on the maximum number of chapters
@@ -235,7 +239,7 @@ def pre_generate_tts():
 
         # Pre-generate TTS for book titles
         for book_name in state["books"]:
-            author, title = get_author_and_title(book_name)
+            author, title = books.get_author_and_title(book_name)
             speak(title+" "+PHRASES['by']+" "+author, speak_audio=False)
 
     except Exception as e:
@@ -271,41 +275,6 @@ def save_state(state):
         json.dump(state, f, indent=4)  # Added indent for better readability
     os.chmod(STATE_FILE, 0o664)  # user read/write, group read/write, others read
 
-def get_author_and_title(book_name):
-    """Extracts the author and title from the book folder name."""
-    author, title = "Unknown", book_name
-    if " - " in book_name:
-        author, title = book_name.split(" - ", 1)
-    return author, title
-
-def get_book_files(book_name):
-    """Returns the list of MP3 files for the book, and its metadata."""
-    # Get all subdirectories (books) in AUDIO_FOLDER, skipping non-directories
-    book_folders = [
-        d for d in sorted(os.listdir(AUDIO_FOLDER))
-        if os.path.isdir(os.path.join(AUDIO_FOLDER, d))
-    ]
-
-    # Ensure the book_name is valid
-    if book_name not in book_folders:
-        raise ValueError(f"Book name {book_name} is not found in the audio folder.")
-    
-    # Get the path to the selected book folder
-    book_path = os.path.join(AUDIO_FOLDER, book_name)
-
-    # Extract author and title from folder name (e.g., "Author - Title")
-    folder_name = book_name
-    author, title = get_author_and_title(folder_name)
-
-    # Get and return the list of MP3 files in the book folder and metadata
-    mp3_files = sorted([
-        os.path.join(book_path, f)
-        for f in os.listdir(book_path)
-        if f.endswith(".mp3") and not f.startswith("._")
-    ])
-    
-    return mp3_files, author, title
-
 def get_file_length(file_path):
     """Get the length of an MP3 file."""
     return int(MP3(file_path).info.length)
@@ -329,7 +298,7 @@ def load_books():
         if book not in existing_books:
             print(f"Adding new book: {book}")
             # Get the files and metadata for the book
-            author, title = get_author_and_title(book)
+            author, title = books.get_author_and_title(book)
             speak(title+" "+PHRASES['by']+" "+author)
             state["books"][book] = {
                 "position": 0,
@@ -366,7 +335,7 @@ def play_pause():
     if current_book == "":
         print("Error: No current book selected.")
         return
-    book_files, author, title = get_book_files(current_book)
+    book_files = books.get_chapters(current_book)
  
  # Get current book's state (position and current_file)
     book_state = state["books"][current_book]
@@ -375,6 +344,7 @@ def play_pause():
     if book_state["current_file"] >= len(book_files):
         print(f"Warning: current_file index out of range for {current_book}. Resetting to 0.")
         book_state["current_file"] = 0
+    
 
     current_file = book_files[book_state["current_file"]]
     
@@ -439,7 +409,7 @@ def play_next():
     global settings_mode
 
     current_book = state["current_book"]
-    book_files, author, title = get_book_files(current_book)
+    book_files = books.get_chapters(current_book)
 
     # Get the current file index and update to the next one
     book_state = state["books"][current_book]
@@ -470,7 +440,7 @@ def play_next():
 def change_chapter(direction):
 
     current_book = state["current_book"]
-    book_files, author, title = get_book_files(current_book)
+    book_files = books.get_chapters(current_book)
     book_state = state["books"][current_book]
 
     book_state["current_file"] += direction
@@ -508,7 +478,7 @@ def change_book(direction):
     current_book = book_names[current_index]
     state["current_book"] = current_book
     save_state(state)  # Save updated state
-    author, title = get_author_and_title(current_book)
+    author, title = books.get_author_and_title(current_book)
     speak(title+" "+PHRASES['by']+" "+author)
 
 # Main loop
