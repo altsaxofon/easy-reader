@@ -122,6 +122,16 @@ switch_a.when_deactivated = switch_callback
 mixer.init() # Audio playback mixer
 dt = Dimits(TTS_MODEL, modelDirectory=TTS_MODEL_PATH) # TTS library
 
+# Runtime variables
+
+state = load_books()  # Load and update the book list
+is_playing = False  # Default to not playing at startup
+start_time = 0 
+settings_mode = False
+speech_sound = None  # Holds the pygame Sound object for TTS playback
+speech_file = None  # Current temporary TTS file
+is_generating = False
+
 
 # Helper functions
 
@@ -348,20 +358,6 @@ def load_books():
 
     save_state(state)
     return state
-
-
-
-
-
-# Main logic
-state = load_books()  # Load and update the book list
-is_playing = False  # Default to not playing at startup
-start_time = 0 
-settings_mode = False
-speech_sound = None  # Holds the pygame Sound object for TTS playback
-speech_file = None  # Current temporary TTS file
-is_generating = False
-
 
 def play_pause():
     """Toggle play/pause state of the current book."""
