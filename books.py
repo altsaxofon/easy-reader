@@ -37,7 +37,12 @@ class Books:
             return len(mp3_files)
         else:
             raise ValueError(f"Book {book} not found in the list of available books.")
-     
+
+    def get_number_of_books(self):
+        """Returns the number of books."""
+        return len(self.books)
+        
+
     def get_chapters(self, book):
         """Returns the list of MP3 files for a book."""
         if book in self.books:
@@ -69,10 +74,10 @@ class Books:
         else:
             raise ValueError(f"Book name {book} is not found in the audio folder.")
 
-    def get_maximum_chapters(self)
+    def get_maximum_chapters(self):
         max_chapters = 0
         for book in self.books:
-            chapters = books.get_chapters(book)
+            chapters = self.get_chapters(book)
             max_chapters = max(max_chapters, len(chapters))
 
 books = Books()  # Create a single global instance

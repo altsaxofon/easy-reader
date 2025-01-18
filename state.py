@@ -72,6 +72,7 @@ class State:
         if book_name and book_name in self.state["books"]:
             return self.state["books"][book_name]
         else:
+            # CAN WE RETURN FIRST BOOK IN LIST IF BOOK NOT EXISTS?
             print("No valid current book selected.")
             return None
 
@@ -83,6 +84,7 @@ class State:
             print(f"Current book set to: {book_name}")
             self.save_state()
         else:
+            # CAN WE SET FIRST BOOK IN LIST IF BOOK NOT EXISTS?
             print(f"Book '{book_name}' not found in the state. Cannot set as current book.")
 
     def get_position(self):

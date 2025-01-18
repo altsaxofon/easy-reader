@@ -227,18 +227,14 @@ def pre_generate_tts():
             speak(phrase, speak_audio=False)  # Generate TTS without speaking it
         
         # Pre-generate TTS for chapter enumerations based on number of books files
-        max_chapters = 0
-        for book_name in state["books"]:
-            book_files = books.get_chapters(book_name)
-            max_chapters = max(max_chapters, len(book_files))
+        max_chapters = books.get_maximum_chapters();
 
-        # Pre-generate TTS for chapters based on the maximum number of chapters
         for chapter_num in range(1, max_chapters + 1):
             chapter_phrase = f"{PHRASES['chapter']} {chapter_num}"
             speak(chapter_phrase, speak_audio=False)  # Generate TTS for chapter titles
 
         # Pre-generate TTS for book titles
-        for book_name in state["books"]:
+        for book_name in books.get_books():
             author, title = books.get_author_and_title(book_name)
             speak(title+" "+PHRASES['by']+" "+author, speak_audio=False)
 
@@ -249,78 +245,13 @@ def pre_generate_tts():
         is_generating = False
         button_led.off()  # Ensure the LED is turned off after pre-generation is done
 
-def load_state():
-    if not os.path.exists(STATE_FILE):
-        # If the JSON file doesn't exist, create it with a default structure
-        print("State file not found. Creating a new one...")
-        
-        # Initialize state with default values
-        state = {
-            "current_book": "",  # Store the folder name as the current book
-            "books": {}
-        }
-        
-        # Save the default state to the JSON file
-        save_state(state)
-        
-        return state
-    else:
-        # If the file exists, load it
-        with open(STATE_FILE, 'r') as f:
-            return json.load(f)
-
-def save_state(state):
-    """Saves the state to the STATE_FILE."""
-    with open(STATE_FILE, 'w') as f:
-        json.dump(state, f, indent=4)  # Added indent for better readability
-    os.chmod(STATE_FILE, 0o664)  # user read/write, group read/write, others read
 
 def get_file_length(file_path):
     """Get the length of an MP3 file."""
     return int(MP3(file_path).info.length)
 
-def load_books():
-    """Loads all books from AUDIO_FOLDER and updates the JSON file."""
-    book_folders = [
-        d for d in sorted(os.listdir(AUDIO_FOLDER))
-        if os.path.isdir(os.path.join(AUDIO_FOLDER, d))
-    ]
-    
-    # Load the current state
-    state = load_state()
-
-    # Compare the current book list with the stored books
-    existing_books = set(state["books"].keys())
-    new_books = set(book_folders)
-
-    # Add new books or update existing ones
-    for book in book_folders:  # Using the folder name as the identifier
-        if book not in existing_books:
-            print(f"Adding new book: {book}")
-            # Get the files and metadata for the book
-            author, title = books.get_author_and_title(book)
-            speak(title+" "+PHRASES['by']+" "+author)
-            state["books"][book] = {
-                "position": 0,
-                "current_file": 0,
-            }
-    # Remove books that no longer exist
-    for book in existing_books:
-        if book not in new_books:
-            print(f"Removing book: {book}")
-            del state["books"][book]
-    
-    # Check if current_book exists, if not set to the first book
-    if state["current_book"] not in book_folders:
-        print(f"Current book {state['current_book']} not found, using the first book instead.")
-        state["current_book"] = book_folders[0]  # Fallback to the first book in the folder
-
-    save_state(state)
-    return state
-
 def play_pause():
     """Toggle play/pause state of the current book."""
-    global state
     global is_playing
     global start_time
     global settings_mode
@@ -331,24 +262,8 @@ def play_pause():
         print("TTS generation in progress. Please wait.")
         return
 
-    current_book = state["current_book"]  # Now referencing by folder name
-    if current_book == "":
-        print("Error: No current book selected.")
-        return
-    book_files = books.get_chapters(current_book)
- 
- # Get current book's state (position and current_file)
-    book_state = state["books"][current_book]
-
-  # Validate current_file index
-    if book_state["current_file"] >= len(book_files):
-        print(f"Warning: current_file index out of range for {current_book}. Resetting to 0.")
-        book_state["current_file"] = 0
+    current_file = books.get_chapter_file(state.current_book, state.get_chapter())
     
-
-    current_file = book_files[book_state["current_file"]]
-    
-
     if is_playing or settings_mode:
         # Music is playing, so pause it
         mixer.music.stop()
@@ -357,7 +272,7 @@ def play_pause():
         # Turn off the LED when paused
         button_led.off()  # Turn off LED when paused
         # Save the current position when paused
-        save_state(state)
+        state.save_state() 
         # Print a message to the console
         print(f"Pausing current book: {current_book}")    
 
@@ -365,8 +280,8 @@ def play_pause():
         if speech_sound and mixer.get_busy():
             speech_sound.stop()
         # Music is not playing, so start it from the saved position
-        start_time = book_state["position"]
-        start_position = max(0, book_state["position"]-REWIND_TIME)  # Start slightly earlier
+        start_time = state.get_position()
+        start_position = max(0, start_time-REWIND_TIME)  # Start slightly earlier
         # Load the current file and play it from the saved position
         print(f"Attempting to load: {current_file}")
         mixer.music.load(current_file)         
@@ -376,12 +291,11 @@ def play_pause():
         # Turn on the LED when playing
         button_led.on()
         # Save the current position when playing
-        save_state(state)
+        #save_state(state)
         # Print a message to the console
         print(f"Playing current book: {current_book}")    
 
 def arrow_key_pushed(direction):
-    global state
     global is_playing
     global settings_mode
 
@@ -404,80 +318,90 @@ def arrow_key_pushed(direction):
 
 def play_next():
     """Play the next file in the current book."""
-    global state
     global start_time
     global settings_mode
 
-    current_book = state["current_book"]
+    current_book = state.current_book
     book_files = books.get_chapters(current_book)
 
     # Get the current file index and update to the next one
-    book_state = state["books"][current_book]
-    book_state["current_file"] += 1
+    next_chapter = state.get_chapter()+1
 
     # If we've reached the end of the book, reset to the first file
-    if book_state["current_file"] >= len(book_files):
-        book_names = list(state["books"].keys())
-        current_index = book_names.index(current_book)
+    if next_chapter >= books.get_number_of_chapters(state.current_book):
+        
+        # Pause the playback
+        play_pause()
+        # Get the index of the current book
+        current_index = books.get_books.index(state.current_book)
         
         # Move to the next book, wrap around if at the last book
-        current_index = (current_index + 1) % len(book_names)
-        state["current_book"] = book_names[current_index]
-        book_state = state["books"][state["current_book"]]
-        book_state["current_file"] = 0  # Start from the first file of the new book
+        current_index = (current_index + 1) % books.get_number_of_books()
+        state.current_book = books.get_books()[current_index]
 
+        # Reset progress for this book
+        state.set_chapter(0)
+        state.set_position(0)
+        
+        # Declare the end of the book
         speak(PHRASES["the_end_of_book"])
-        #play_pause()  # Pause playback after changing the book
-
+    else:
+        state.set_chapter(next_chapter)
+        
     # Reset position for the new file and play it
-    book_state["position"] = 0
+    state.set_position(0)
     start_time = 0
-    current_file = book_files[book_state["current_file"]]
-    mixer.music.load(current_file)
-    mixer.music.play(start=book_state["position"])
-    save_state(state)
+    mixer.music.load(books.get_chapter_file(state.current_book, state.get_chapter()))
+    mixer.music.play(start=state.get_position())
+    state.save_state
 
 def change_chapter(direction):
 
-    current_book = state["current_book"]
-    book_files = books.get_chapters(current_book)
-    book_state = state["books"][current_book]
-
-    book_state["current_file"] += direction
+    # Get current chapter
+    currentChapter = state.get_chapter();
+    numberOfChaptersInCurrentBook = books.get_number_of_chapters(state.current_book);
+    #Get chapter and add or remove one depenging on direction
+    nextChapter = currentChapter + direction
 
     # If we've reached the end of the book, reset to the first file
-    if book_state["current_file"] >= len(book_files):
-        book_state["current_file"] = 0  # Start from the first file
-    elif book_state["current_file"] < 0:
-        book_state["current_file"] = len(book_files) - 1  # Start from the last file
+    if nextChapter >= numberOfChaptersInCurrentBook:
+        nextChapter = 0  # Start from the first file
+    # If we go back from 1, go to the last chapter of the book
+    elif nextChapter < 0:
+        nextChapter = numberOfChaptersInCurrentBook - 1  # Start from the last file
 
+    # Update the chapter
+    state.set_chapter(nextChapter)
     # Reset position for the new file and play it
-    book_state["position"] = 0
+    state.set_position(0)
     start_time = 0
-    current_file = book_files[book_state["current_file"]]
-    speak(PHRASES["chapter"]+" "+ str(book_state["current_file"] + 1))
+    
+    # Announce the selected chapter
+    speak(PHRASES["chapter"]+" "+ str(state.get_chapter() + 1))
 
-    save_state(state)
+    state.save_state()
 
 def change_book(direction):
 
     # Get the list of book names
-    book_names = list(state["books"].keys())  # Convert dictionary keys to a list
+    book_names = books.get_books()
 
-    current_book = state["current_book"]
-    current_index = book_names.index(current_book) if current_book in book_names else 0
-    current_index += direction
+    # Get total number of books
+    total_amount_of_books = books.get_number_of_books();
+ 
+    # Get index of current book 
+    current_index = book_names.index(state.current_book) if current_book in book_names else 0
+    next_book = current_index + direction
     
     # Wrap the index around the list of books
-    if current_index < 0:
-        current_index = len(book_names) - 1
-    elif current_index >= len(book_names):
-        current_index = 0
+    if next_book < 0:
+        next_book = total_amount_of_books - 1
+    elif next_book >= total_amount_of_books():
+        next_book = 0
     
     # Update the current book
-    current_book = book_names[current_index]
-    state["current_book"] = current_book
-    save_state(state)  # Save updated state
+    state.current_book = book_names[next_book]
+    state.save_state(state)  # Save updated state
     author, title = books.get_author_and_title(current_book)
     speak(title+" "+PHRASES['by']+" "+author)
 
@@ -492,7 +416,7 @@ print("Starting Easy Reader")
 ensure_directories()
 
 # Load books into state
-state = load_books()  # Load and update the book list
+# state = load_books()  # Load and update the book list
 
 # Blink led to indicate startup
 blink_led()
@@ -514,11 +438,11 @@ while True:
         
         # Only save state every 1 second to avoid unnecessary writes
         if time.time() - last_position_update >= PROGRESS_UPDATE_INTERVAL:
-            current_book = state["current_book"]
+            current_book = state.current_book
             book_state = state["books"][current_book]
             current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
             book_state["position"] = current_position
-            save_state(state)
+            state.save_state(state)
             last_position_update = time.time()
 
     if not mixer.music.get_busy() and is_playing:
