@@ -15,14 +15,16 @@ PHRASES = {
     "the_end_of_book" : "Boken är slut, tryck på knappen för att påbörja nästa bok"
 }
 
-# Paths
+# Base directories
 HOME_DIR = Path(__file__).resolve().parent.parent
 SD_CARD_PATH = "/mnt/sdcard"  # Path to SD card (FAT32 partition)
 
-AUDIO_FOLDER = Path(SD_CARD_PATH) / "audiobooks"  # Audiobooks are stored here
-TTS_MODEL_PATH = Path(HOME_DIR) / "piper"
-TTS_FILES_PATH = Path(HOME_DIR) / "voice"
-
+# Paths 
+PATHS = {
+    "AUDIO_FOLDER": Path(SD_CARD_PATH) / "audiobooks",
+    "TTS_MODEL_PATH": Path(HOME_DIR) / "piper",
+    "TTS_FILES_PATH": Path(HOME_DIR) / "voice"
+}
 # Files
 STATE_FILE = Path(SD_CARD_PATH) / "playback_state.json"  # Progress state file
 
@@ -32,3 +34,9 @@ NEXT_BUTTON_PIN = 27
 PREV_BUTTON_PIN = 22
 LED_PIN = 18
 SWITCH_PIN_A = 23
+
+# Make sure all paths exists
+for name, path in PATHS.items():
+    if not path.exists():
+        print(f"Directory {path} does not exist. Creating it...")
+        path.mkdir(parents=True, exist_ok=True)  # Create the directory, including parents if necessary

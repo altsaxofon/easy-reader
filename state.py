@@ -1,3 +1,5 @@
+#todo make chapter and position ino setters and getters @properties
+
 import json
 from pathlib import Path
 import config

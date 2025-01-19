@@ -16,7 +16,7 @@ class Books:
         
         # Iterate over all subdirectories (books) in AUDIO_FOLDER
         book_folders = [
-            d.name for d in Path(config.AUDIO_FOLDER).iterdir() if d.is_dir()
+            d.name for d in Path(config.PATHS["AUDIO_FOLDER"]).iterdir() if d.is_dir()
         ]
 
         return book_folders
@@ -71,7 +71,7 @@ class Books:
 
     def get_path(self, book):
         if book in self.books:
-            book_path = Path(config.AUDIO_FOLDER) / book
+            book_path = Path(config.PATHS["AUDIO_FOLDER"]) / book
             return book_path
         else:
             raise ValueError(f"Book name {book} is not found in the audio folder.")

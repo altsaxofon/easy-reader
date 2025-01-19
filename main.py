@@ -20,48 +20,17 @@ from pathlib import Path
  
 # Import a global instance of state and books
 import config
+
 from books import books
 from state import state
 from player import audioPlayer
-
+from speech import speech
 
 # test the new class
 print(books.get_books())
 
 
 # Settings 
-
-
-
-REWIND_TIME = 1  # The amount of seconds the player will rewind / recap on play
-PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
-
-TTS_MODEL = "sv_SE-nst-medium" # TTS voice model - for english use e.g. 'en_GB-alba-medium'
-
-# Phrases used by the TTS. If translated, use a voice model of correct language 
-PHRASES = {
-    "choose_book": "Välj bok",
-    "choose_capter": "Välj del",
-    "chapter": "Del",
-    "by": "av",
-    "the_end_of_book" : "Boken är slut, tryck på knappen för att påbörja nästa bok"
-    }
-
-# Paths
-
-
-# Since our service run as SUDO we need to identify the home folder by looking at the dir of this script
-# This is a bit hacky - better solution should be found
-HOME_DIR = Path(__file__).resolve().parent.parent
-SD_CARD_PATH = "/mnt/sdcard"  # Path to SD card (FAT32 partition) (update as necessary)
-
-AUDIO_FOLDER = Path(SD_CARD_PATH) / "audiobooks"  # Audiobooks are stored here
-
-TTS_MODEL_PATH = Path(HOME_DIR) / "piper"
-TTS_FILES_PATH = Path(HOME_DIR) / "voice"
-
-# FILES
-
 
 # PIN definitions
 PLAY_BUTTON_PIN = 17
@@ -111,11 +80,6 @@ button_prev.when_pressed = lambda: hardware_callback('prev')
 switch_a.when_activated = lambda: hardware_callback('switch')
 switch_a.when_deactivated = lambda: hardware_callback('switch')
 
-# INITIATE MIXER AND TTS
-mixer.pre_init(frequency=48000, buffer=2048)
-mixer.init() # Audio playback mixer
-dt = Dimits(TTS_MODEL, modelDirectory=TTS_MODEL_PATH) # TTS library
-
 # Runtime variables
 
 is_playing = False  # Default to not playing at startup
@@ -124,22 +88,6 @@ settings_mode = False
 speech_sound = None  # Holds the pygame Sound object for TTS playback
 speech_file = None  # Current temporary TTS file
 is_generating = False
-
-
-# Helper functions
-
-# Ensure all required directories exist
-def ensure_directories():
-    directories = [
-        AUDIO_FOLDER, 
-        TTS_MODEL_PATH, 
-        TTS_FILES_PATH
-    ]
-    
-    for directory in directories:
-        if not directory.exists():
-            print(f"Directory {directory} does not exist. Creating it...")
-            directory.mkdir(parents=True, exist_ok=True)  # Create the directory, including parents if necessary
 
 # Blink the LED 
 def blink_led(times=3, leaveOn = False):
@@ -155,89 +103,6 @@ def blink_led(times=3, leaveOn = False):
     if leaveOn:
         button_led.on()
         
-def speak(text, speak_audio=True, ):
-    global speech_sound, speech_file
-    global dt
- 
-    # Ensure that dt (the TTS library) is initialized
-    if dt is None:
-        raise ValueError("Dimits object 'dt' is required.")
-
-    # Generate a safe filename for the WAV file 
-    filename = text.replace(" ", "_").replace(",", "").replace("ä", "a").replace("å", "a").replace("ö", "o").lower()
-    filename_wav = f"{filename}.wav"
-    filepath =  Path(TTS_FILES_PATH) / filename_wav
-
-    try:
-        # Check if the file exists
-        if not filepath.exists() or filepath.stat().st_size == 0:
-            # If the file doesn't exist, generate it
-            print(f"Generating audio file for: {text}")
-            try:
-                blink_led(2, leaveOn = True)
-                print(f"Calling text_2_audio_file with text: {text}")
-                dt.text_2_audio_file(text, filename, "/home/pi/voice/", format="wav")
-                print("Audio file generated successfully.")
-            except Exception as e:
-                print(f"Error in text_2_audio_file(): {e}")
-                raise  # Re-raise the error for further handling
-        else:
-            #print(f"Audio file for '{text}' already exists.")
-            pass
-
-        if speak_audio:
-            # If the flag is True, play the generated audio file
-            print(f"Speaking: {text}")
-            # Stop any previous speech playback
-            audioPlayer.play(filepath)
-        else:
-            #print(f"Pre-generated WAV for '{text}' is ready but not spoken.")
-            pass
-
-    except Exception as e:
-        print(f"Error in speak(): {e}")
-
-
-def pre_generate_tts():
-    """Pre-generate TTS."""
-    global is_generating
-    global state
-
-    print("Pre-generating TTS")
-
-
-    # Turn on the LED to indicate TTS generation
-    button_led.on()
-    # Set the flag to indicate TTS generation is in progress
-    is_generating = True    
-
-
-    # Generate the TTS phrases
-
-    try:
-        # Pre-generate TTS for all phrases
-        for phrase in PHRASES.values():
-            speak(phrase, speak_audio=False)  # Generate TTS without speaking it
-        
-        # Pre-generate TTS for chapter enumerations based on number of books files
-        max_chapters = books.get_maximum_chapters();
-
-        for chapter_num in range(1, max_chapters + 1):
-            chapter_phrase = f"{PHRASES['chapter']} {chapter_num}"
-            speak(chapter_phrase, speak_audio=False)  # Generate TTS for chapter titles
-
-        # Pre-generate TTS for book titles
-        for book_name in books.get_books():
-            author, title = books.get_author_and_title(book_name)
-            speak(title+" "+PHRASES['by']+" "+author, speak_audio=False)
-
-    except Exception as e:
-        print(f"Error during TTS pre-generation: {e}")
-    finally:
-        print("Pre generation of TTS finnished")
-        is_generating = False
-        button_led.off()  # Ensure the LED is turned off after pre-generation is done
-
 def save_position():
     global start_time
     current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
@@ -248,13 +113,11 @@ def save_position():
     print(f"current position: {current_position}")
     state.set_position(current_position)
     
-
 def play_pause():
     """Toggle play/pause state of the current book."""
     global is_playing
     global start_time
     global settings_mode
-    global speech_sound
     global is_generating
 
     if is_generating:
@@ -316,9 +179,9 @@ def arrow_key_pushed(direction):
         play_pause()
 
         if switch_a.value == 1:
-            speak(PHRASES["choose_book"])
+            speech.speak(config.PHRASES["choose_book"])
         else:
-            speak(PHRASES["choose_capter"])
+            speech.speak(config.PHRASES["choose_capter"])
  
 
 def play_next():
@@ -353,7 +216,7 @@ def play_next():
         state.set_position(0)
         
         # Declare the end of the book
-        speak(PHRASES["the_end_of_book"])
+        speech.speak(config.PHRASES["the_end_of_book"])
 
     else:
         print(f'Playn next chapter: {next_chapter}')
@@ -391,7 +254,7 @@ def change_chapter(direction):
     start_time = 0
     
     # Announce the selected chapter
-    speak(PHRASES["chapter"]+" "+ str(state.get_chapter() + 1))
+    speech.speak(config.PHRASES["chapter"]+" "+ str(state.get_chapter() + 1))
 
     state.save_state()
 
@@ -416,7 +279,7 @@ def change_book(direction):
     # Update the current book
     state.current_book = book_names[next_book]
     author, title = books.get_author_and_title(state.current_book)
-    speak(title+" "+PHRASES['by']+" "+author)
+    speech.speak(title+" "+config.PHRASES['by']+" "+author)
 
 # Main loop
 
@@ -424,12 +287,6 @@ def change_book(direction):
 
 
 print("Starting Easy Reader")
-
-# Create directories if they not exist
-ensure_directories()
-
-# Load books into state
-# state = load_books()  # Load and update the book list
 
 # Blink led to indicate startup
 blink_led()
@@ -439,22 +296,19 @@ last_update = time.time()
 
 # Main loop to periodically update the position
 last_position_update = time.time()
-
-# Pre generate TTS:
-pre_generate_tts()
-                         
+                   
 while True:
     #time.sleep(0.1)
 
     # Check if the music is playing and periodically save progress
-    if AudioPlayer.is_playing and is_playing:
+    if audioPlayer.is_playing and is_playing:
         
         # Only save state every 1 second to avoid unnecessary writes
-        if time.time() - last_position_update >= PROGRESS_UPDATE_INTERVAL:
+        if time.time() - last_position_update >= config.PROGRESS_UPDATE_INTERVAL:
             save_position()
             last_position_update = time.time()
 
-    if not AudioPlayer.is_playing and is_playing:
+    if not audioPlayer.is_playing and is_playing:
         play_next()
     
     time.sleep(0.1)
