@@ -30,18 +30,19 @@ class AudioPlayer:
         mixer.music.load(audio_file_path)
 
         # Reset the position if longar then file
-        if self._get_audio_length(audio_file_path) and start_time_ms >= self._get_audio_length(audio_file_path):
+        print(f'Audio length of clip: {self._get_audio_length(audio_file_path)}')
+        if self._get_audio_length_seconds(audio_file_path) and start_time_ms >= self._get_audio_length_seconds(audio_file_path):
             start_time_ms = 0
 
         # Convert start time from milliseconds to seconds
         start_time_s = start_time_ms / 1000
-        mixer.music.play(start=start_time_s)
+        mixer.music.play(start=start_time_ms)
         print(f"Player - Started audio at {start_time_s} seconds.")
 
     def get_position_ms():
         return mixer.music.get_pos()
 
-    def _get_audio_length(self, file_path):
+    def _get_audio_length_seconds(self, file_path):
         """Get the length of an MP3 file."""
         file_extension = file_path.suffix.lower()
         
