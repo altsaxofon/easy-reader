@@ -9,7 +9,7 @@ PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 TTS_MODEL = "sv_SE-nst-medium" # TTS voice model
 PHRASES = {
     "choose_book": "Välj bok",
-    "choose_capter": "Välj del",
+    "choose_chapter": "Välj del",
     "chapter": "Del",
     "by": "av",
     "the_end_of_book" : "Boken är slut, tryck på knappen för att påbörja nästa bok"

@@ -56,15 +56,6 @@ callbacks = {
 # Initialize hardware
 hardware = Hardware(callbacks)
 
-# Runtime variables
-
-is_playing = False  # Default to not playing at startup
-start_time = 0 
-settings_mode = False
-speech_sound = None  # Holds the pygame Sound object for TTS playback
-speech_file = None  # Current temporary TTS file
-is_generating = False
-
 # Connect hardware callbacks
 speech.register_blink_callback(hardware.blink_led)
 speech.register_led_on_callback(hardware.led_on)
@@ -78,78 +69,97 @@ def save_position():
     state.set_position(current_position)
 
 def play_pause():
-    """Toggle play/pause state of the current book."""
-    global is_playing
-    global start_time
-    global settings_mode
-    global is_generating
+    """Toggle playback or pause of the current book."""
+    global is_playing, start_time, settings_mode, is_generating
 
     if is_generating:
         print("TTS generation in progress. Please wait.")
         return
 
+    settings_mode = False
+
+    if is_playing:
+        # Pause playback
+        pause_audio()
+    else:
+        # Resume or start playback
+        resume_audio()
+
+def pause_audio():
+    """Handles pausing the audio."""
+    global is_playing, start_time
+
+    is_playing = False
+    elapsed_time = mixer.music.get_pos() // 1000  # Elapsed time in seconds
+    start_time += elapsed_time  # Update start time
+    audioPlayer.stop()
+    save_position()
+    hardware.led_off()
+
+def resume_audio():
+    """Handles resuming or starting the audio."""
+    global is_playing, start_time
+
+    # Get current file
     current_file = books.get_chapter_file(state.current_book, state.get_chapter())
-    print(f'Play_Pause(): current file: {current_file}')
 
-    if is_playing or settings_mode:
-        
-        print(f'Main - play_pause(): pause')
-        # Pausing playback
-        is_playing = False
-
-        # Calculate and save the elapsed time
-        elapsed_time = mixer.music.get_pos() // 1000  # Convert milliseconds to seconds
-        start_time += elapsed_time  # Add elapsed time to the start_time
-
-        # Stop audio and save state
-        audioPlayer.stop()
-        save_position()
-
-        # Turn off the LED
-        hardware.led_off()
-
-        print(f"Paused at position: {start_time}s in {current_file}")
-   
-
-    elif not is_playing:
-        
-        # Set the is_playing flag to True
-        is_playing = True
-
-        # Get start position
-        start_time = state.get_position()
-        start_position = max(0, start_time-config.REWIND_TIME)  # Start slightly earlier
-
-        # Play the current file
-        audioPlayer.play(current_file, start_position)
-
-        # Turn on the LED when playing
-        hardware.led_on()
-        
-        print(f"Playing current book: {current_file}")    
+    is_playing = True
+    start_time = state.get_position()  # Get playback position
+    start_position = max(0, start_time - config.REWIND_TIME)
+    audioPlayer.play(current_file, start_position)
+    hardware.led_on()
+    print(f"Playing current book: {current_file}")
 
 def arrow_key_pushed(direction):
-    global is_playing
+    """Handle button presses for settings and playback."""
     global settings_mode
-
-    print(f'Switch status. {hardware.switch_status}')
-
-    # Check if the settings mode is active
-    if settings_mode and not direction == 0:
-        # If the A switch is active, change the book, otherwise change the chapter
-        if hardware.switch_status == 1:
-            change_book(direction)
-        else:
-            change_chapter(direction)
+    pause_audio()
+    
+    if settings_mode and direction != 0:
+        # Adjust book or chapter based on switch status
+        adjust_settings(direction)
     else:
+        # Enter settings mode or toggle playback        
         settings_mode = True
-        play_pause()
+        announce_settings_choice()
 
-        if hardware.switch_status == 1:
-            speech.speak(config.PHRASES["choose_book"])
-        else:
-            speech.speak(config.PHRASES["choose_capter"])
- 
+def adjust_settings(direction):
+    """Adjust the book or chapter in settings mode."""
+    if hardware.switch_status == 1:
+        change_book(direction)
+    else:
+        change_chapter(direction)
+
+def announce_settings_choice():
+    """Announce whether the user is selecting a book or chapter."""
+    print(f'Hardware switch is = {hardware.switch_status}')
+    if hardware.switch_status == 1:
+        speech.speak(config.PHRASES["choose_book"])
+    else:
+        speech.speak(config.PHRASES["choose_chapter"])
+
+def change_chapter(direction):
+    """Change the current chapter based on direction (-1 or 1)."""
+    total_chapters = books.get_number_of_chapters(state.current_book)
+    next_chapter = (state.get_chapter() + direction) % total_chapters  # Wrap around chapters
+
+    state.set_chapter(next_chapter)
+    state.set_position(0)  # Reset position for new chapter
+    speech.speak(f"{config.PHRASES['chapter']} {next_chapter + 1}")
+    state.save_state()
+
+def change_book(direction):
+    """Change the current book based on direction (-1 or 1)."""
+    book_names = books.get_books()
+    total_books = len(book_names)
+
+    # Wrap around books using modular arithmetic
+    current_index = book_names.index(state.current_book)
+    next_index = (current_index + direction) % total_books
+
+    state.current_book = book_names[next_index]
+    author, title = books.get_author_and_title(state.current_book)
+    speech.speak(f"{title} {config.PHRASES['by']} {author}")
 
 def play_next():
     """Play the next file in the current book, or switch book """
@@ -233,7 +243,16 @@ def change_book(direction):
     author, title = books.get_author_and_title(state.current_book)
     speech.speak(title+" "+config.PHRASES['by']+" "+author)
 
-# Main loop
+# Application
+
+is_playing = False  # Flag for when audiobook is playing
+is_generating = False # Flag for hwn TTS is being generated (playback disabled)
+settings_mode = False # Flag for settings mode (choosing book / chapter)
+
+start_time = 0  # Stores 
+
+speech_sound = None  # Holds the pygame Sound object for TTS playback
+speech_file = None  # Current temporary TTS file
 
 print("Starting Easy Reader")
 
