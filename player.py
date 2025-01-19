@@ -51,5 +51,10 @@ class AudioPlayer:
     def is_playing(self):
         return mixer.music.get_busy()
 
+    @property
+    def position(self):
+        # Return position in seconds 
+        return mixer.music.get_pos() // 1000
+
 #Instanciaate audio player    
 audioPlayer = AudioPlayer()

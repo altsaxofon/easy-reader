@@ -10,7 +10,6 @@ class State:
         self.state_file = Path(config.STATE_FILE)
         self.state = self.load_state()
         self.load_books()
-        print('State - State initiated. Current book: "{self.state.current_book}"')
 
     def load_state(self):
         """Loads the current state from the JSON file or creates a new one if it doesn't exist."""
@@ -40,7 +39,6 @@ class State:
             if book not in existing_books:
                 print(f"State - Adding new book: {book}")
                 author, title = books.get_title_and_author(book)
-                print(f"{title} by {author}")
                 self.state["books"][book] = {
                     "position": 0,
                     "chapter": 0,
@@ -68,6 +66,24 @@ class State:
             json.dump(self.state, f, indent=4)
 
     @property
+    def position(self):
+        return self.current_book_data.get("position", 0)
+   
+    @position.setter
+    def position(self, position):
+        self.current_book_data["position"] = position
+        self.save_state()
+
+    @property
+    def chapter(self):
+        return self.current_book_data.get("chapter", 0)
+   
+    @chapter.setter
+    def chapter(self, chapter):
+        self.current_book_data["chapter"] = chapter
+        self.save_state()
+
+    @property
     def current_book(self):
         """Returns the current book name."""
         return self.state.get("current_book", "")
@@ -77,7 +93,6 @@ class State:
         """Sets the current book and validates it exists in the state."""
         if book_name in self.state["books"]:
             self.state["current_book"] = book_name
-            print(f"State - Current book set to: {book_name}")
             self.save_state()
         else:
             print(f"State - current_book(): Book '{book_name}' not found in the state.")
@@ -87,35 +102,5 @@ class State:
         """Returns the data for the current book."""
         book_name = self.current_book
         return self.state["books"].get(book_name, None)
-
-    def get_position(self):
-        """Returns the position of the current book."""
-        if self.current_book_data:
-            return self.current_book_data.get("position", 0)
-        print("No current book selected.")
-        return None
-
-    def get_chapter(self):
-        """Returns the chapter of the current book."""
-        if self.current_book_data:
-            return self.current_book_data.get("chapter", 0)
-        print("State - get_chapter(): No current book selected .")
-        return None
-
-    def set_position(self, position):
-        """Sets the position for the current book."""
-        if self.current_book_data:
-            self.current_book_data["position"] = position
-            self.save_state()
-        else:
-            print("State - set_position(): No current book selected. Cannot set position.")
-
-    def set_chapter(self, chapter):
-        """Sets the chapter for the current book."""
-        if self.current_book_data:
-            self.current_book_data["chapter"] = chapter
-            self.save_state()
-        else:
-            print("State - set_chapter(): No current book selected. Cannot set chapter.")
 
 state = State()  # Create a single global instance

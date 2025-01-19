@@ -1,26 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Todo:
-# Implement a settings JSON file stored on the Fat32 partition
-# only save state in state file! on update
-
 """main.py: Easy reader application."""
 
 __author__      = "Erik Arnell"
 
-import os
 import time
-import json
-from pygame import mixer
-from mutagen.mp3 import MP3 
-from gpiozero import Button, DigitalInputDevice, LED
-from dimits import Dimits
-from pathlib import Path
-from hardware import Hardware
 
-# Import a global instance of state and books
 import config
+
+from hardware import Hardware
 
 from books import books
 from state import state
@@ -65,8 +54,8 @@ def save_position():
     """Save the current playback position."""
     
     # Add the elapsed playing time to the start_time
-    current_position = start_time + (mixer.music.get_pos() // 1000)  # Convert to seconds
-    state.set_position(current_position)
+    current_position = start_time + audioPlayer.position  # Convert to seconds
+    state.position = current_position
 
 def play_pause():
     """Toggle playback or pause of the current book."""
@@ -87,10 +76,10 @@ def play_pause():
 
 def pause_audio():
     """Handles pausing the audio."""
-    global is_playing, start_time
+    global is_playing
 
     is_playing = False
-    elapsed_time = mixer.music.get_pos() // 1000  # Elapsed time in seconds
+    elapsed_time = audioPlayer.position # Elapsed time in seconds
     start_time += elapsed_time  # Update start time
     audioPlayer.stop()
     save_position()
@@ -101,14 +90,13 @@ def resume_audio():
     global is_playing, start_time
 
     # Get current file
-    current_file = books.get_chapter_file(state.current_book, state.get_chapter())
+    current_file = books.get_chapter_file(state.current_book, state.chapter)
 
     is_playing = True
-    start_time = state.get_position()  # Get playback position
+    start_time = state.position  # Get playback position
     start_position = max(0, start_time - config.REWIND_TIME)
     audioPlayer.play(current_file, start_position)
     hardware.led_on()
-    print(f"Playing current book: {current_file}")
 
 def arrow_key_pushed(direction):
     """Handle button presses for settings and playback."""
@@ -132,7 +120,7 @@ def adjust_settings(direction):
 
 def announce_settings_choice():
     """Announce whether the user is selecting a book or chapter."""
-    print(f'Hardware switch is = {hardware.switch_status}')
+
     if hardware.switch_status == 1:
         speech.speak(config.PHRASES["choose_book"])
     else:
@@ -141,10 +129,10 @@ def announce_settings_choice():
 def change_chapter(direction):
     """Change the current chapter based on direction (-1 or 1)."""
     total_chapters = books.get_number_of_chapters(state.current_book)
-    next_chapter = (state.get_chapter() + direction) % total_chapters  # Wrap around chapters
+    next_chapter = (state.chapter + direction) % total_chapters  # Wrap around chapters
 
-    state.set_chapter(next_chapter)
-    state.set_position(0)  # Reset position for new chapter
+    state.chapter = next_chapter
+    state.position = 0  # Reset position for new chapter
     speech.speak(f"{config.PHRASES['chapter']} {next_chapter + 1}")
     state.save_state()
 
@@ -164,41 +152,47 @@ def change_book(direction):
 def play_next():
     """Play the next file in the current book, or switch book """
 
-    global start_time
+    global start_time, is_playing
 
     audioPlayer.stop()  # Stop audio player
-    next_chapter = state.get_chapter()+1  # Add one to chapter index
+    next_chapter = state.chapter+1  # Add one to chapter index
 
     # If we've reached the end of the book, reset to the first file
     if next_chapter >= books.get_number_of_chapters(state.current_book):
         
-        # Get the index of the current book
-        current_index = books.get_books().index(state.current_book)
+        pause_audio()
         
+        state.chapter = 0   # Reset chapter for the book that just ended
+        state.position = 0  # Reset position for the book that just ended
+        
+        current_index = books.get_books().index(state.current_book)
         # Move to the next book, wrap around if at the last book
-        current_index = (current_index + 1) % books.get_number_of_books()
-        state.current_book = books.get_books()[current_index]
+        next_index = (current_index + 1) % books.get_number_of_books()
+        state.current_book = books.get_books()[next_index]
 
-        # Reset progress for this book
-        state.set_chapter(0)
-        state.set_position(0)
+        # Reset progress for the next book
+        state.chapter = 0
+        state.position = 0
         
         # Declare the end of the book
         speech.speak(config.PHRASES["the_end_of_book"])
 
+    # If not end of book, switch chapter
     else:
 
-        state.set_chapter(next_chapter) # Update our state
-        state.set_position(0) # Reset position
-        start_time = 0    # Reset position for the new file and play it
+        state.chapter = next_chapter # Update chapter
+        state.position = 0 # Reset position
+        start_time = 0    # Reset start time
         
-        #Play next chapter from the start
-        audioPlayer.play(books.get_chapter_file(state.current_book, state.get_chapter()), 0)
+        # Play next chapter
+        audioPlayer.play(books.get_chapter_file(state.current_book, state.chapter), 0)
 
 def change_chapter(direction):
 
+    global start_time
+
     # Get current chapter
-    currentChapter = state.get_chapter();
+    currentChapter = state.chapter
     numberOfChaptersInCurrentBook = books.get_number_of_chapters(state.current_book);
     #Get chapter and add or remove one depenging on direction
     nextChapter = currentChapter + direction
@@ -210,13 +204,13 @@ def change_chapter(direction):
         nextChapter = numberOfChaptersInCurrentBook - 1  # Start from the last file
 
     # Update the chapter
-    state.set_chapter(nextChapter)
+    state.chapter = nextChapter
     # Reset position for the new file and play it
-    state.set_position(0)
+    state.position = 0
     start_time = 0
     
     # Announce the selected chapter
-    speech.speak(config.PHRASES["chapter"]+" "+ str(state.get_chapter() + 1))
+    speech.speak(config.PHRASES["chapter"]+" "+ str(state.chapter + 1))
 
     state.save_state()
 
