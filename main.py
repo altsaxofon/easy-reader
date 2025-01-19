@@ -21,6 +21,7 @@ from hardware import Hardware
 
 # Import a global instance of state and books
 import config
+
 from books import books
 from state import state
 from player import audioPlayer
@@ -55,18 +56,6 @@ callbacks = {
 # Initialize hardware
 hardware = Hardware(callbacks)
 
-
-if button_type == "play":
-    settings_mode = False
-    play_pause() 
-elif button_type == "next":
-    arrow_key_pushed(1)
-elif button_type == "prev":
-    arrow_key_pushed(-1)
-elif button_type == "switch":
-    arrow_key_pushed(0)
-
-
 # Runtime variables
 
 is_playing = False  # Default to not playing at startup
@@ -76,16 +65,16 @@ speech_sound = None  # Holds the pygame Sound object for TTS playback
 speech_file = None  # Current temporary TTS file
 is_generating = False
 
+# Connect hardware callbacks
+speech.register_blink_callback(hardware.blink_led)
+speech.register_led_on_callback(hardware.led_on)
+speech.register_led_off_callback(hardware.led_off)
         
 def save_position():
     """Save the current playback position."""
     
     # Add the elapsed playing time to the start_time
     current_position = start_time + (mixer.music.get_pos() // 1000)  # Convert to seconds
-    print("Saving position")
-    print(f"start time: {start_time}")
-    print(f"Player position (ms): {mixer.music.get_pos()}")
-    print(f"Current position (s): {current_position}")
     state.set_position(current_position)
 
 def play_pause():
@@ -104,6 +93,7 @@ def play_pause():
 
     if is_playing or settings_mode:
         
+        print(f'Main - play_pause(): pause')
         # Pausing playback
         is_playing = False
 
@@ -116,7 +106,7 @@ def play_pause():
         save_position()
 
         # Turn off the LED
-        button_led.off()
+        hardware.led_off()
 
         print(f"Paused at position: {start_time}s in {current_file}")
    
@@ -134,7 +124,7 @@ def play_pause():
         audioPlayer.play(current_file, start_position)
 
         # Turn on the LED when playing
-        button_led.on()
+        hardware.led_on()
         
         print(f"Playing current book: {current_file}")    
 
@@ -142,10 +132,12 @@ def arrow_key_pushed(direction):
     global is_playing
     global settings_mode
 
+    print(f'Switch status. {hardware.switch_status}')
+
     # Check if the settings mode is active
     if settings_mode and not direction == 0:
         # If the A switch is active, change the book, otherwise change the chapter
-        if switch_a.value == 1:
+        if hardware.switch_status == 1:
             change_book(direction)
         else:
             change_chapter(direction)
@@ -153,32 +145,23 @@ def arrow_key_pushed(direction):
         settings_mode = True
         play_pause()
 
-        if switch_a.value == 1:
+        if hardware.switch_status == 1:
             speech.speak(config.PHRASES["choose_book"])
         else:
             speech.speak(config.PHRASES["choose_capter"])
  
 
 def play_next():
-    """Play the next file in the current book."""
+    """Play the next file in the current book, or switch book """
+
     global start_time
-    global settings_mode
 
-    # Stop audio plauyer
-    audioPlayer.stop()
-
-    # Get the current file index and update to the next one
-    next_chapter = state.get_chapter()+1
-
-    print(f'Playing next chapter')
-    print(f'Current chapter: {state.get_chapter()}')
-    print(f'Next chapter before check: {next_chapter}')
+    audioPlayer.stop()  # Stop audio player
+    next_chapter = state.get_chapter()+1  # Add one to chapter index
 
     # If we've reached the end of the book, reset to the first file
     if next_chapter >= books.get_number_of_chapters(state.current_book):
         
-        print(f'Next chapter: {next_chapter} >= {books.get_number_of_chapters(state.current_book)} ')
-
         # Get the index of the current book
         current_index = books.get_books().index(state.current_book)
         
@@ -194,19 +177,13 @@ def play_next():
         speech.speak(config.PHRASES["the_end_of_book"])
 
     else:
-        print(f'Playn next chapter: {next_chapter}')
-        state.set_chapter(next_chapter)
-        state.set_position(0)
 
-
-    # Reset position for the new file and play it
-
-    print(f'Chapter updated to chapter {state.get_chapter()}');
-    start_time = 0
-    print(f'Next chapter file: {books.get_chapter_file(state.current_book, state.get_chapter())}')
-    
-    #Play next chapter from the start
-    audioPlayer.play(books.get_chapter_file(state.current_book, state.get_chapter()), 0)
+        state.set_chapter(next_chapter) # Update our state
+        state.set_position(0) # Reset position
+        start_time = 0    # Reset position for the new file and play it
+        
+        #Play next chapter from the start
+        audioPlayer.play(books.get_chapter_file(state.current_book, state.get_chapter()), 0)
 
 def change_chapter(direction):
 
@@ -258,13 +235,10 @@ def change_book(direction):
 
 # Main loop
 
-# Initate libraries
-
-
 print("Starting Easy Reader")
 
 # Blink led to indicate startup
-blink_led()
+hardware.blink_led(3)
 
 # Main loop to update progress periodically
 last_update = time.time()

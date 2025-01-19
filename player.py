@@ -17,7 +17,6 @@ class AudioPlayer:
         """Stop the current audio."""
         if self.is_playing:
             mixer.music.stop()
-        print("Player - stopped current audio.")
     
     def play(self, audio_file_path, start_time_s = 0):
 
@@ -25,7 +24,6 @@ class AudioPlayer:
         if self.is_playing:
             self.stop()
         
-        print(f"Playback module: playing file: {audio_file_path}")
         self.current_file = audio_file_path
         mixer.music.load(audio_file_path)
 

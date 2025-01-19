@@ -53,7 +53,10 @@ class Speech:
             # If the file doesn't exist, generate it
             print(f"Generating audio file for: {text}")
             try:
-                #blink_led(2, leaveOn = True)
+
+                if self.blink_led_callback:
+                    self.blink_led_callback(times=2, leaveOn=True)  # Blink LED using callback
+
                 self.dt.text_2_audio_file(text, filename, "/home/pi/voice/", format="wav")
                 print(f"Audio file generated successfully at {filepath}.")
             except Exception as e:
@@ -69,6 +72,7 @@ class Speech:
 
         if exists:
             audioPlayer.play(filepath)
+            print(f'Speaking: {text}')
         else:
             print('Speech - Speak(): Filepath does not exist')
 
@@ -77,8 +81,8 @@ class Speech:
         print("Pre-generating TTS...")
 
         self._is_generating = True  # Set the flag to True
-        # Turn led on here
-        # LED ON
+        if self.led_on_callback:
+            self.led_on_callback()  #  Turn LED on using callback
         try:
             # Pre-generate TTS for all phrases
             for phrase in config.PHRASES.values():
@@ -100,7 +104,8 @@ class Speech:
             print(f"Error during TTS pre-generation: {e}")
         finally:
             print("Pre-generation finished.")
-            # LED OFF
+            if self.led_off_callback:
+                self.led_off_callback()  #  Turn LED off using callback
             self._is_generating = False  # Set the flag to False
     
     @property

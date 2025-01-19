@@ -1,5 +1,6 @@
 from gpiozero import Button, DigitalInputDevice, LED
 import time
+import config
 
 class Hardware:
     def __init__(self, callbacks):
@@ -37,7 +38,7 @@ class Hardware:
         else:
             print(f"No callback defined for {button_type}")
 
-    def blink_led(self, times=3, leave_on=False):
+    def blink_led(self, times=2, leave_on=False):
         """
         Blink the LED a specified number of times.
         """
@@ -58,8 +59,15 @@ class Hardware:
         """
         self.button_led.on()
 
-    def led_on(self, on = True):
+    def led_off(self, on = True):
         """
         Turn led off.
         """
         self.button_led.off()
+
+    @property
+    def switch_status(self):
+        """
+        Turn led off.
+        """
+        return self.switch_a.is_active
