@@ -104,15 +104,16 @@ def blink_led(times=3, leaveOn = False):
         button_led.on()
         
 def save_position():
-    global start_time
-    current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
+    """Save the current playback position."""
+    
+    # Add the elapsed playing time to the start_time
+    current_position = start_time + (mixer.music.get_pos() // 1000)  # Convert to seconds
     print("Saving position")
     print(f"start time: {start_time}")
-    print(f"Player position: {mixer.music.get_pos()}")
-    current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
-    print(f"current position: {current_position}")
+    print(f"Player position (ms): {mixer.music.get_pos()}")
+    print(f"Current position (s): {current_position}")
     state.set_position(current_position)
-    
+
 def play_pause():
     """Toggle play/pause state of the current book."""
     global is_playing
@@ -129,22 +130,22 @@ def play_pause():
 
     if is_playing or settings_mode:
         
-        # Set is_playing flag to false
+        # Pausing playback
         is_playing = False
 
-        # Stop audio
+        # Calculate and save the elapsed time
+        elapsed_time = mixer.music.get_pos() // 1000  # Convert milliseconds to seconds
+        start_time += elapsed_time  # Add elapsed time to the start_time
+
+        # Stop audio and save state
         audioPlayer.stop()
+        save_position()
 
-        # Turn off the LED 
-        button_led.off() 
-        
-        # Save the current position when paused
-        ######
+        # Turn off the LED
+        button_led.off()
 
-        state.save_state() 
-        
-        # Print a message to the console
-        print(f"Main - Pausing current book: {current_file}")    
+        print(f"Paused at position: {start_time}s in {current_file}")
+   
 
     elif not is_playing:
         

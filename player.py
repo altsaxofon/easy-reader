@@ -19,7 +19,7 @@ class AudioPlayer:
             mixer.music.stop()
         print("Player - stopped current audio.")
     
-    def play(self, audio_file_path, start_time_ms = 0):
+    def play(self, audio_file_path, start_time_s = 0):
 
         # If there's a file playing, stop it before starting the new one
         if self.is_playing:
@@ -30,14 +30,11 @@ class AudioPlayer:
         mixer.music.load(audio_file_path)
 
         # Reset the position if longar then file
-        print(f'Audio length of clip: {self._get_audio_length(audio_file_path)}')
-        if self._get_audio_length_seconds(audio_file_path) and start_time_ms >= self._get_audio_length_seconds(audio_file_path):
+        if self._get_audio_length_seconds(audio_file_path) and start_time_s >= self._get_audio_length_seconds(audio_file_path):
             start_time_ms = 0
 
         # Convert start time from milliseconds to seconds
-        start_time_s = start_time_ms / 1000
-        mixer.music.play(start=start_time_ms)
-        print(f"Player - Started audio at {start_time_s} seconds.")
+        mixer.music.play(start=start_time_s)
 
     def get_position_ms():
         return mixer.music.get_pos()
