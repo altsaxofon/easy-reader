@@ -3,6 +3,7 @@
 
 # Todo:
 # Implement a settings JSON file stored on the Fat32 partition
+# only save state in state file! on update
 
 """main.py: Easy reader application."""
 
@@ -17,13 +18,12 @@ from gpiozero import Button, DigitalInputDevice, LED
 from dimits import Dimits
 from pathlib import Path
  
+# Import a global instance of state and books
 from books import books
-from state import State
+from state import state
 
 # Initiate classes
 
-# A global Book instance is imported as books
-state = State() # Import a state instance
 
 # test the new class
 print(books.get_books())
@@ -33,7 +33,7 @@ print(books.get_books())
 
 
 
-REWIND_TIME = 5  # The amount of seconds the player will rewind / recap on play
+REWIND_TIME = 1  # The amount of seconds the player will rewind / recap on play
 PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
 
 TTS_MODEL = "sv_SE-nst-medium" # TTS voice model - for english use e.g. 'en_GB-alba-medium'
@@ -113,7 +113,7 @@ switch_a.when_activated = lambda: hardware_callback('switch')
 switch_a.when_deactivated = lambda: hardware_callback('switch')
 
 # INITIATE MIXER AND TTS
-
+mixer.pre_init(frequency=48000, buffer=2048)
 mixer.init() # Audio playback mixer
 dt = Dimits(TTS_MODEL, modelDirectory=TTS_MODEL_PATH) # TTS library
 
@@ -245,10 +245,20 @@ def pre_generate_tts():
         is_generating = False
         button_led.off()  # Ensure the LED is turned off after pre-generation is done
 
-
 def get_file_length(file_path):
     """Get the length of an MP3 file."""
     return int(MP3(file_path).info.length)
+
+def save_position():
+    global start_time
+    current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
+    print("Saving position")
+    print(f"start time: {start_time}")
+    print(f"Player position: {mixer.music.get_pos()}")
+    current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
+    print(f"current position: {current_position}")
+    state.set_position(current_position)
+    
 
 def play_pause():
     """Toggle play/pause state of the current book."""
@@ -263,7 +273,8 @@ def play_pause():
         return
 
     current_file = books.get_chapter_file(state.current_book, state.get_chapter())
-    
+    print(f'Play_Pause(): current file: {current_file}')
+
     if is_playing or settings_mode:
         # Music is playing, so pause it
         mixer.music.stop()
@@ -272,9 +283,10 @@ def play_pause():
         # Turn off the LED when paused
         button_led.off()  # Turn off LED when paused
         # Save the current position when paused
+        
         state.save_state() 
         # Print a message to the console
-        print(f"Pausing current book: {current_book}")    
+        print(f"Pausing current book: {current_file}")    
 
     elif not is_playing:
         if speech_sound and mixer.get_busy():
@@ -293,7 +305,7 @@ def play_pause():
         # Save the current position when playing
         #save_state(state)
         # Print a message to the console
-        print(f"Playing current book: {current_book}")    
+        print(f"Playing current book: {current_file}")    
 
 def arrow_key_pushed(direction):
     global is_playing
@@ -321,19 +333,24 @@ def play_next():
     global start_time
     global settings_mode
 
-    current_book = state.current_book
-    book_files = books.get_chapters(current_book)
+    mixer.music.stop()
+
+    book_files = books.get_chapters(state.current_book)
 
     # Get the current file index and update to the next one
     next_chapter = state.get_chapter()+1
 
+    print(f'Playing next chapter')
+    print(f'Current chapter: {state.get_chapter()}')
+    print(f'Next chapter before check: {next_chapter}')
+
     # If we've reached the end of the book, reset to the first file
     if next_chapter >= books.get_number_of_chapters(state.current_book):
         
-        # Pause the playback
-        play_pause()
+        print(f'Next chapter: {next_chapter} >= {books.get_number_of_chapters(state.current_book)} ')
+
         # Get the index of the current book
-        current_index = books.get_books.index(state.current_book)
+        current_index = books.get_books().index(state.current_book)
         
         # Move to the next book, wrap around if at the last book
         current_index = (current_index + 1) % books.get_number_of_books()
@@ -345,12 +362,17 @@ def play_next():
         
         # Declare the end of the book
         speak(PHRASES["the_end_of_book"])
+
     else:
+        print(f'Playn next chapter: {next_chapter}')
         state.set_chapter(next_chapter)
-        
+
     # Reset position for the new file and play it
+
+    print(f'Chapter updated to chapter {state.get_chapter()}');
     state.set_position(0)
     start_time = 0
+    print(f'Next chapter file: {books.get_chapter_file(state.current_book, state.get_chapter())}')
     mixer.music.load(books.get_chapter_file(state.current_book, state.get_chapter()))
     mixer.music.play(start=state.get_position())
     state.save_state
@@ -362,7 +384,6 @@ def change_chapter(direction):
     numberOfChaptersInCurrentBook = books.get_number_of_chapters(state.current_book);
     #Get chapter and add or remove one depenging on direction
     nextChapter = currentChapter + direction
-
     # If we've reached the end of the book, reset to the first file
     if nextChapter >= numberOfChaptersInCurrentBook:
         nextChapter = 0  # Start from the first file
@@ -390,19 +411,18 @@ def change_book(direction):
     total_amount_of_books = books.get_number_of_books();
  
     # Get index of current book 
-    current_index = book_names.index(state.current_book) if current_book in book_names else 0
+    current_index = book_names.index(state.current_book) if state.current_book in book_names else 0
     next_book = current_index + direction
     
     # Wrap the index around the list of books
     if next_book < 0:
         next_book = total_amount_of_books - 1
-    elif next_book >= total_amount_of_books():
+    elif next_book >= total_amount_of_books:
         next_book = 0
     
     # Update the current book
     state.current_book = book_names[next_book]
-    state.save_state(state)  # Save updated state
-    author, title = books.get_author_and_title(current_book)
+    author, title = books.get_author_and_title(state.current_book)
     speak(title+" "+PHRASES['by']+" "+author)
 
 # Main loop
@@ -438,11 +458,7 @@ while True:
         
         # Only save state every 1 second to avoid unnecessary writes
         if time.time() - last_position_update >= PROGRESS_UPDATE_INTERVAL:
-            current_book = state.current_book
-            book_state = state["books"][current_book]
-            current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
-            book_state["position"] = current_position
-            state.save_state(state)
+            save_position()
             last_position_update = time.time()
 
     if not mixer.music.get_busy() and is_playing:

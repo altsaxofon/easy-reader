@@ -1,3 +1,5 @@
+#Todo - pre load number of chapters for each book?
+
 from pathlib import Path
 import config
 import os
@@ -33,7 +35,7 @@ class Books:
     def get_number_of_chapters(self, book):
         """Returns the number of chapters (MP3 files) in the book."""
         if book in self.books:
-            mp3_files = self.get_file_list(book)
+            mp3_files = self.get_chapters(book)
             return len(mp3_files)
         else:
             raise ValueError(f"Book {book} not found in the list of available books.")
@@ -61,9 +63,9 @@ class Books:
             # Validate that the chapter exists in the book, else reset chapter to 0
             if chapter >= self.get_number_of_chapters(book):
                 # Return the filename of the MP3 of the capter
-                return self.get_chapters(book)[chapter]
-            else:
                 return self.get_chapters(book)[0]
+            else:
+                return self.get_chapters(book)[chapter]
         else:
             raise ValueError(f"Book {book} not found in the list of available books.")
 
@@ -77,7 +79,7 @@ class Books:
     def get_maximum_chapters(self):
         max_chapters = 0
         for book in self.books:
-            chapters = self.get_chapters(book)
-            max_chapters = max(max_chapters, len(chapters))
+            max_chapters = max(max_chapters,  self.get_number_of_chapters(book))
+        return max_chapters
 
 books = Books()  # Create a single global instance
