@@ -8,7 +8,7 @@ class Hardware:
 
         :param callbacks: A dictionary of callback functions (e.g., {'play': func_play, 'next': func_next})
         """
-        
+
         self.callbacks = callbacks
 
         # Define hardware components
@@ -51,3 +51,15 @@ class Hardware:
 
         if leave_on:
             self.button_led.on()
+
+    def led_on(self, on = True):
+        """
+        Turn led on.
+        """
+        self.button_led.on()
+
+    def led_on(self, on = True):
+        """
+        Turn led off.
+        """
+        self.button_led.off()

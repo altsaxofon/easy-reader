@@ -10,6 +10,11 @@ from books import books
 class Speech:
     
     def __init__(self):
+        
+        self.blink_led_callback = None  # Placeholder for blink callback
+        self.led_on_callback = None  # Placeholder for blink callback
+        self.led_off_callback = None  # Placeholder for blink callback
+
         # Initialize Dimits TTS library
         self.dt = Dimits(config.TTS_MODEL, modelDirectory=config.PATHS["TTS_MODEL_PATH"])  # Initialize TTS
 
@@ -18,7 +23,17 @@ class Speech:
 
         # Pre generate speech on load
         self.pre_generate_tts()
+
     # Helper functions
+    def register_blink_callback(self, callback):
+        self.blink_led_callback = callback
+
+    def register_led_on_callback(self, callback):
+        self.led_on_callback = callback
+
+    def register_led_off_callback(self, callback):
+        self.led_off_callback = callback
+
 
     def _filepath_from_text(self, text):
         # Generate a safe filename from text

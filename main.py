@@ -17,68 +17,55 @@ from mutagen.mp3 import MP3
 from gpiozero import Button, DigitalInputDevice, LED
 from dimits import Dimits
 from pathlib import Path
- 
+from hardware import Hardware
+
 # Import a global instance of state and books
 import config
-
 from books import books
 from state import state
 from player import audioPlayer
 from speech import speech
 
-# test the new class
-print(books.get_books())
-
-
-# Settings 
-
-# PIN definitions
-PLAY_BUTTON_PIN = 17
-NEXT_BUTTON_PIN = 27
-PREV_BUTTON_PIN = 22
-
-LED_PIN = 18
-
-SWITCH_PIN_A = 23
-
 # Initialize hardware
 
-button_play = Button(PLAY_BUTTON_PIN, pull_up=True, bounce_time=0.03)  
-button_next = Button(NEXT_BUTTON_PIN, pull_up=True, bounce_time=0.03) 
-button_prev = Button(PREV_BUTTON_PIN, pull_up=True, bounce_time=0.03) 
+# Define callback functions
+def play_callback():
+    print("Play button pressed")
+    play_pause()
 
-switch_a = DigitalInputDevice(SWITCH_PIN_A, pull_up=True, bounce_time=0.5)
+def next_callback():
+    print("Next button pressed")
+    arrow_key_pushed(1)
 
-button_led = LED(LED_PIN)  # Create an LED object for GPIO 18
+def prev_callback():
+    print("Previous button pressed")
+    arrow_key_pushed(-1)
 
-# Initialize hardware callbacks
+def switch_callback():
+    print("Switch activated/deactivated")
+    arrow_key_pushed(0)
 
-def hardware_callback(button_type):
-    global is_generating
-    global settings_mode
+callbacks = {
+    'play': play_callback,
+    'next': next_callback,
+    'prev': prev_callback,
+    'switch': switch_callback
+}
 
-    if is_generating:
-        print("TTS generation in progress. Please wait.")
-        return
-    
-    if button_type == "play":
-        settings_mode = False
-        play_pause() 
-    elif button_type == "next":
-        arrow_key_pushed(1)
-    elif button_type == "prev":
-        arrow_key_pushed(-1)
-    elif button_type == "switch":
-        arrow_key_pushed(0)
+# Initialize hardware
+hardware = Hardware(callbacks)
 
 
-# Attach the callback function to the button press event
-button_play.when_pressed = lambda: hardware_callback('play')
-button_next.when_pressed = lambda: hardware_callback('next')
-button_prev.when_pressed = lambda: hardware_callback('prev')
+if button_type == "play":
+    settings_mode = False
+    play_pause() 
+elif button_type == "next":
+    arrow_key_pushed(1)
+elif button_type == "prev":
+    arrow_key_pushed(-1)
+elif button_type == "switch":
+    arrow_key_pushed(0)
 
-switch_a.when_activated = lambda: hardware_callback('switch')
-switch_a.when_deactivated = lambda: hardware_callback('switch')
 
 # Runtime variables
 
@@ -89,19 +76,6 @@ speech_sound = None  # Holds the pygame Sound object for TTS playback
 speech_file = None  # Current temporary TTS file
 is_generating = False
 
-# Blink the LED 
-def blink_led(times=3, leaveOn = False):
-
-    button_led.off() #Turn of led if on
-
-    for i in range(times):  # Start from 0 to times-1
-        button_led.on()
-        time.sleep(0.3)  # LED on for 0.3 seconds
-        button_led.off()
-        time.sleep(0.2)  # LED off for 0.2 seconds
-    
-    if leaveOn:
-        button_led.on()
         
 def save_position():
     """Save the current playback position."""
