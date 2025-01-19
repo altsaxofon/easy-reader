@@ -1,5 +1,3 @@
-import os
-import time
 import wave
 import contextlib
 
@@ -7,9 +5,8 @@ from pygame import mixer
 from mutagen.mp3 import MP3 
 
 from books import books
-from state import state
 
-class Playback:
+class AudioPlayer:
     def __init__(self):
 
         self.current_file = None  # Store the current file being played
@@ -23,9 +20,9 @@ class Playback:
         """Stop the current audio."""
         if self.is_playing:
             mixer.music.stop()
-        print("Stopped current audio.")
+        print("Player - stopped current audio.")
     
-    def play(self, audio_file_path, position):
+    def play(self, audio_file_path, start_time_ms = 0):
 
         # If there's a file playing, stop it before starting the new one
         if self.is_playing:
@@ -36,17 +33,16 @@ class Playback:
         mixer.music.load(audio_file_path)
 
         # Reset the position if longar then file
-        if position >= self._get_audio_length(audio_file_path):
-            position = 0
-        
-        mixer.music.play(start=position)
-        print("Started playback.")    
-        
-    def save_position(self):
-        """Save the current playback position."""
-        current_position = self.start_time + mixer.music.get_pos() // 1000  # Convert to seconds
-        self.state.set_position(current_position)
-        print(f"Position saved: {current_position}s")
+        if start_time_ms >= self._get_audio_length(audio_file_path):
+            start_time_ms = 0
+
+        # Convert start time from milliseconds to seconds
+        start_time_s = start_time_ms / 1000
+        mixer.music.play(start=start_time_s)
+        print(f"Player - Started audio at {start_time_s} seconds.")
+
+    def get_position_ms():
+        return mixer.music.get_pos()
 
     def _get_audio_length(file_path):
         """Get the length of an MP3 or WAV file."""
@@ -66,4 +62,6 @@ class Playback:
     def is_playing(self):
         """Returns the current book name."""
         return mixer.music.get_busy()
-    
+
+#Instanciaate audio player    
+audioPlayer = AudioPlayer()

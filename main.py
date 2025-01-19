@@ -19,10 +19,10 @@ from dimits import Dimits
 from pathlib import Path
  
 # Import a global instance of state and books
+import config
 from books import books
 from state import state
-
-# Initiate classes
+from player import audioPlayer
 
 
 # test the new class
@@ -61,7 +61,6 @@ TTS_MODEL_PATH = Path(HOME_DIR) / "piper"
 TTS_FILES_PATH = Path(HOME_DIR) / "voice"
 
 # FILES
-STATE_FILE = Path(SD_CARD_PATH) / "playback_state.json"  # Progress state file
 
 
 # PIN definitions
@@ -190,13 +189,7 @@ def speak(text, speak_audio=True, ):
             # If the flag is True, play the generated audio file
             print(f"Speaking: {text}")
             # Stop any previous speech playback
-            if speech_sound and mixer.get_busy():
-                print("Stopping current TTS playback.")
-                speech_sound.stop()
-
-            # Load and play the speech sound
-            speech_sound = mixer.Sound(filepath)
-            speech_sound.play()
+            audioPlayer.play(filepath)
         else:
             #print(f"Pre-generated WAV for '{text}' is ready but not spoken.")
             pass
@@ -245,10 +238,6 @@ def pre_generate_tts():
         is_generating = False
         button_led.off()  # Ensure the LED is turned off after pre-generation is done
 
-def get_file_length(file_path):
-    """Get the length of an MP3 file."""
-    return int(MP3(file_path).info.length)
-
 def save_position():
     global start_time
     current_position = start_time + mixer.music.get_pos() // 1000  # Convert to seconds
@@ -276,35 +265,39 @@ def play_pause():
     print(f'Play_Pause(): current file: {current_file}')
 
     if is_playing or settings_mode:
-        # Music is playing, so pause it
-        mixer.music.stop()
-        # Set the is_playing flag to False
-        is_playing = False
-        # Turn off the LED when paused
-        button_led.off()  # Turn off LED when paused
-        # Save the current position when paused
         
+        # Set is_playing flag to false
+        is_playing = False
+
+        # Stop audio
+        audioPlayer.stop()
+
+        # Turn off the LED 
+        button_led.off() 
+        
+        # Save the current position when paused
+        ######
+
         state.save_state() 
+        
         # Print a message to the console
-        print(f"Pausing current book: {current_file}")    
+        print(f"Main - Pausing current book: {current_file}")    
 
     elif not is_playing:
-        if speech_sound and mixer.get_busy():
-            speech_sound.stop()
-        # Music is not playing, so start it from the saved position
-        start_time = state.get_position()
-        start_position = max(0, start_time-REWIND_TIME)  # Start slightly earlier
-        # Load the current file and play it from the saved position
-        print(f"Attempting to load: {current_file}")
-        mixer.music.load(current_file)         
-        mixer.music.play(start=start_position)
+        
         # Set the is_playing flag to True
         is_playing = True
+
+        # Get start position
+        start_time = state.get_position()
+        start_position = max(0, start_time-config.REWIND_TIME)  # Start slightly earlier
+
+        # Play the current file
+        audioPlayer.play(current_file, start_position)
+
         # Turn on the LED when playing
         button_led.on()
-        # Save the current position when playing
-        #save_state(state)
-        # Print a message to the console
+        
         print(f"Playing current book: {current_file}")    
 
 def arrow_key_pushed(direction):
@@ -333,9 +326,8 @@ def play_next():
     global start_time
     global settings_mode
 
-    mixer.music.stop()
-
-    book_files = books.get_chapters(state.current_book)
+    # Stop audio plauyer
+    audioPlayer.stop()
 
     # Get the current file index and update to the next one
     next_chapter = state.get_chapter()+1
@@ -366,16 +358,17 @@ def play_next():
     else:
         print(f'Playn next chapter: {next_chapter}')
         state.set_chapter(next_chapter)
+        state.set_position(0)
+
 
     # Reset position for the new file and play it
 
     print(f'Chapter updated to chapter {state.get_chapter()}');
-    state.set_position(0)
     start_time = 0
     print(f'Next chapter file: {books.get_chapter_file(state.current_book, state.get_chapter())}')
-    mixer.music.load(books.get_chapter_file(state.current_book, state.get_chapter()))
-    mixer.music.play(start=state.get_position())
-    state.save_state
+    
+    #Play next chapter from the start
+    audioPlayer.play(books.get_chapter_file(state.current_book, state.get_chapter()), 0)
 
 def change_chapter(direction):
 
@@ -454,14 +447,14 @@ while True:
     #time.sleep(0.1)
 
     # Check if the music is playing and periodically save progress
-    if mixer.music.get_busy() and is_playing:
+    if AudioPlayer.is_playing and is_playing:
         
         # Only save state every 1 second to avoid unnecessary writes
         if time.time() - last_position_update >= PROGRESS_UPDATE_INTERVAL:
             save_position()
             last_position_update = time.time()
 
-    if not mixer.music.get_busy() and is_playing:
+    if not AudioPlayer.is_playing and is_playing:
         play_next()
     
     time.sleep(0.1)
