@@ -15,16 +15,22 @@ class State:
         """Loads the current state from the JSON file or creates a new one if it doesn't exist."""
         if not self.state_file.exists():
             print("State - State file not found. Creating a new one...")
-            # Default state structure
-            state = {
+            self.create_empty_state_file()
+        else:
+            try:
+                with self.state_file.open("r") as f:
+                    self.state = json.load(f)
+            except (json.JSONDecodeError, ValueError):
+                print("State - Invalid JSON file. Creating a new state...")
+                self.create_empty_state_file()
+        return self.state
+    
+    def create_empty_state_file(self):
+        self.state = {
                 "current_book": "",
                 "books": {}
             }
-            self.save_state(state)
-        else:
-            with self.state_file.open("r") as f:
-                state = json.load(f)
-        return state
+        self.save_state() 
 
     def load_books(self):
         """Loads all books via `books.get_books()` and updates the state file."""
@@ -38,7 +44,7 @@ class State:
         for book in book_folders:
             if book not in existing_books:
                 print(f"State - Adding new book: {book}")
-                author, title = books.get_title_and_author(book)
+                author, title = books.get_author_and_title(book)
                 self.state["books"][book] = {
                     "position": 0,
                     "chapter": 0,
@@ -86,7 +92,18 @@ class State:
     @property
     def current_book(self):
         """Returns the current book name."""
-        return self.state.get("current_book", "")
+        book_name = self.state.get("current_book", "")
+        if book_name in self.state["books"]:
+            return book_name
+        # Get the first book in state["books"] if no valid current book is set
+        if self.state["books"]:
+            first_book = next(iter(self.state["books"]))
+            print(f"State - No current book set. Defaulting to first book: {first_book}")
+            self.state["current_book"] = first_book
+            self.save_state()
+            return first_book
+        # If no books are available, return an empty string
+        return ""
 
     @current_book.setter
     def current_book(self, book_name):

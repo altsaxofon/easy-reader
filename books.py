@@ -1,5 +1,3 @@
-#Todo - pre load number of chapters for each book?
-
 from pathlib import Path
 import config
 import os

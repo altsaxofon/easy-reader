@@ -6,6 +6,7 @@ from dimits import Dimits
 import config
 from player import audioPlayer
 from books import books 
+import os
 
 class Speech:
     
@@ -22,16 +23,18 @@ class Speech:
         self._is_generating = False  # Use _ to indicate this is a private attribute
 
         # Pre generate speech on load
-        self.pre_generate_tts()
 
     # Helper functions
     def register_blink_callback(self, callback):
+        print(f"Blink LED callback registered: {callback}")
         self.blink_led_callback = callback
 
     def register_led_on_callback(self, callback):
+        print(f"LED on registered: {callback}")
         self.led_on_callback = callback
 
     def register_led_off_callback(self, callback):
+        print(f"LED off registered: {callback}")
         self.led_off_callback = callback
 
 
@@ -53,12 +56,16 @@ class Speech:
             # If the file doesn't exist, generate it
             print(f"Generating audio file for: {text}")
             try:
-
+                # Blink LED to indicate TTS generation is in progress
                 if self.blink_led_callback:
-                    self.blink_led_callback(times=2, leaveOn=True)  # Blink LED using callback
+                    self.blink_led_callback(times=2, leave_on=True)  # Blink LED using callback
 
-                self.dt.text_2_audio_file(text, filename, "/home/pi/voice/", format="wav")
+                # Generate TTS with the dimitis library
+                self.dt.text_2_audio_file(text, filename, config.PATHS["TTS_FILES_PATH"], format="wav")
+
                 print(f"Audio file generated successfully at {filepath}.")
+                return filename
+            
             except Exception as e:
                 print(f"Error in text_2_audio_file(): {e}")
                 raise  # Re-raise the error for further handling
@@ -80,33 +87,58 @@ class Speech:
         """Pre-generate TTS for all common phrases and chapters."""
         print("Pre-generating TTS...")
 
+        # Create a set to store all files we are generating
+        required_files = set()
+
+
         self._is_generating = True  # Set the flag to True
         if self.led_on_callback:
             self.led_on_callback()  #  Turn LED on using callback
+            print(f"Attempting to turn on led via callback")
         try:
             # Pre-generate TTS for all phrases
             for phrase in config.PHRASES.values():
-                self.generate_speech(phrase)
+                required_files.add(self.generate_speech(phrase))
+                
 
             # Pre-generate TTS for chapter enumerations
             max_chapters = books.get_maximum_chapters()
 
             for chapter_num in range(1, max_chapters + 1):
                 chapter_phrase = f"{config.PHRASES['chapter']} {chapter_num}"
-                self.generate_speech(chapter_phrase)
+                required_files.add(self.generate_speech(chapter_phrase))
 
             # Pre-generate TTS for book titles
             for book_name in books.get_books():
                 author, title = books.get_author_and_title(book_name)
-                self.generate_speech(title + " " + config.PHRASES['by'] + " " + author)
+                required_files.add(self.generate_speech(title + " " + config.PHRASES['by'] + " " + author))
 
         except Exception as e:
             print(f"Error during TTS pre-generation: {e}")
         finally:
             print("Pre-generation finished.")
+            self.cleanup_wav_files(required_files)
             if self.led_off_callback:
                 self.led_off_callback()  #  Turn LED off using callback
             self._is_generating = False  # Set the flag to False
+
+    def cleanup_wav_files(required_files):
+        #  Identify all existing WAV files
+        tts_path = Path(config.PATHS["TTS_FILES_PATH"])
+        existing_files = set(f.name for f in tts_path.glob("*.wav"))
+
+        # 5. Determine redundant files
+        redundant_files = existing_files - required_files
+
+        # 6. Delete redundant files
+        for filename in redundant_files:
+            file_path = tts_path / filename
+            try:
+                os.remove(file_path)
+                print(f"Deleted unused WAV file: {file_path}")
+            except Exception as e:
+                print(f"Failed to delete {file_path}: {e}")
+
     
     @property
     def is_generating(self):

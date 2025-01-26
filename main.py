@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# TODO: Reset progress for the next book when the end of the current book is reached
+# Not resetting porgress for next book when reached the end
 
 """main.py: Easy reader application."""
 
-__author__      = "Erik Arnell"
+__author__ = "Erik Arnell"
 
 import time
 
 import config
 
 from hardware import Hardware
-
-from books import books
-from state import state
-from player import audioPlayer
-from speech import speech
 
 # Initialize hardware
 
@@ -45,11 +42,17 @@ callbacks = {
 # Initialize hardware
 hardware = Hardware(callbacks)
 
+# Import modules 
+from books import books
+from state import state
+from player import audioPlayer
+from speech import speech
+
 # Connect hardware callbacks
 speech.register_blink_callback(hardware.blink_led)
 speech.register_led_on_callback(hardware.led_on)
 speech.register_led_off_callback(hardware.led_off)
-        
+
 def save_position():
     """Save the current playback position."""
     
@@ -59,31 +62,31 @@ def save_position():
 
 def play_pause():
     """Toggle playback or pause of the current book."""
-    global is_playing, start_time, settings_mode, is_generating
+    global is_playing, settings_mode, is_generating
 
     if is_generating:
         print("TTS generation in progress. Please wait.")
         return
 
-    settings_mode = False
+    settings_mode = False  # Turn settings mode off
 
     if is_playing:
-        # Pause playback
-        pause_audio()
+        pause_audio()  # Pause playback
     else:
-        # Resume or start playback
-        resume_audio()
+        resume_audio() # Resume or start playback
 
 def pause_audio():
     """Handles pausing the audio."""
     global is_playing
 
-    is_playing = False
-    elapsed_time = audioPlayer.position # Elapsed time in seconds
-    start_time += elapsed_time  # Update start time
-    audioPlayer.stop()
-    save_position()
-    hardware.led_off()
+
+    #elapsed_time = audioPlayer.position # Elapsed time in seconds
+    #start_time += elapsed_time  # Update start time
+
+    save_position()     # Save position of player
+    audioPlayer.stop()  # Stop audio playback
+    is_playing = False  # Set is_playing flag to false
+    hardware.led_off()  # Turn led off
 
 def resume_audio():
     """Handles resuming or starting the audio."""
@@ -92,16 +95,16 @@ def resume_audio():
     # Get current file
     current_file = books.get_chapter_file(state.current_book, state.chapter)
 
-    is_playing = True
     start_time = state.position  # Get playback position
-    start_position = max(0, start_time - config.REWIND_TIME)
-    audioPlayer.play(current_file, start_position)
-    hardware.led_on()
+    start_position = max(0, start_time - config.REWIND_TIME) # Rewind playback to recap
+    audioPlayer.play(current_file, start_position)  #  Resume playback
+    is_playing = True
+    hardware.led_on()   # Turn led on
 
 def arrow_key_pushed(direction):
     """Handle button presses for settings and playback."""
     global settings_mode
-    pause_audio()
+    pause_audio()   # Pause playback
     
     if settings_mode and direction != 0:
         # Adjust book or chapter based on switch status
@@ -152,25 +155,26 @@ def change_book(direction):
 def play_next():
     """Play the next file in the current book, or switch book """
 
-    global start_time, is_playing
+    print("Playing next chapter")
 
-    audioPlayer.stop()  # Stop audio player
+    global start_time, is_playing
     next_chapter = state.chapter+1  # Add one to chapter index
 
     # If we've reached the end of the book, reset to the first file
     if next_chapter >= books.get_number_of_chapters(state.current_book):
         
         pause_audio()
+                
+        current_index = books.get_books().index(state.current_book)
         
         state.chapter = 0   # Reset chapter for the book that just ended
         state.position = 0  # Reset position for the book that just ended
-        
-        current_index = books.get_books().index(state.current_book)
+
         # Move to the next book, wrap around if at the last book
         next_index = (current_index + 1) % books.get_number_of_books()
         state.current_book = books.get_books()[next_index]
 
-        # Reset progress for the next book
+        # Reset progress for the new book
         state.chapter = 0
         state.position = 0
         
@@ -185,34 +189,7 @@ def play_next():
         start_time = 0    # Reset start time
         
         # Play next chapter
-        audioPlayer.play(books.get_chapter_file(state.current_book, state.chapter), 0)
-
-def change_chapter(direction):
-
-    global start_time
-
-    # Get current chapter
-    currentChapter = state.chapter
-    numberOfChaptersInCurrentBook = books.get_number_of_chapters(state.current_book);
-    #Get chapter and add or remove one depenging on direction
-    nextChapter = currentChapter + direction
-    # If we've reached the end of the book, reset to the first file
-    if nextChapter >= numberOfChaptersInCurrentBook:
-        nextChapter = 0  # Start from the first file
-    # If we go back from 1, go to the last chapter of the book
-    elif nextChapter < 0:
-        nextChapter = numberOfChaptersInCurrentBook - 1  # Start from the last file
-
-    # Update the chapter
-    state.chapter = nextChapter
-    # Reset position for the new file and play it
-    state.position = 0
-    start_time = 0
-    
-    # Announce the selected chapter
-    speech.speak(config.PHRASES["chapter"]+" "+ str(state.chapter + 1))
-
-    state.save_state()
+        resume_audio()
 
 def change_book(direction):
 
@@ -243,14 +220,17 @@ is_playing = False  # Flag for when audiobook is playing
 is_generating = False # Flag for hwn TTS is being generated (playback disabled)
 settings_mode = False # Flag for settings mode (choosing book / chapter)
 
-start_time = 0  # Stores 
+start_time = 0  # Stores the time
 
 speech_sound = None  # Holds the pygame Sound object for TTS playback
 speech_file = None  # Current temporary TTS file
 
 print("Starting Easy Reader")
 
-# Blink led to indicate startup
+# Pre generate speech (this may take some time the first boot)
+speech.pre_generate_tts()
+
+# Blink led to indicate easyereader is operational
 hardware.blink_led(3)
 
 # Main loop to update progress periodically
