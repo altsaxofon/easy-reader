@@ -1,10 +1,11 @@
 import os
 from pathlib import Path
+import json
 
 # Settings
 
-REWIND_TIME = 5  # The amount of seconds the player will rewind / recap on play
-PROGRESS_UPDATE_INTERVAL = 1  # Interval to update progress in seconds
+DEFAULT_REWIND_TIME = 10  # The amount of seconds the player will rewind / recap on play
+DEFAULT_UPDATE_INTERVAL = 10  # Interval to update progress in seconds
 
 TTS_MODEL = "sv_SE-nst-medium" # TTS voice model
 PHRASES = {
@@ -27,6 +28,7 @@ PATHS = {
 }
 # Files
 STATE_FILE = Path(SD_CARD_PATH) / "playback_state.json"  # Progress state file
+SETTINGS_FILE = Path(SD_CARD_PATH) / "settings.json"  # Progress state file
 
 # PIN Definitions
 PLAY_BUTTON_PIN = 17
@@ -40,3 +42,44 @@ for name, path in PATHS.items():
     if not path.exists():
         print(f"Directory {path} does not exist. Creating it...")
         path.mkdir(parents=True, exist_ok=True)  # Create the directory, including parents if necessary
+
+# Load settings from SD-CARD
+def create_default_settings():
+    """Creates the settings file with default values if it does not exist."""
+    default_settings = {
+        "rewind_time_seconds": DEFAULT_REWIND_TIME,
+        "update_interval_seconds": DEFAULT_UPDATE_INTERVAL
+    }
+
+    try:
+        SETTINGS_FILE.parent.mkdir(parents=True, exist_ok=True)  # Ensure directory exists
+        SETTINGS_FILE.write_text(json.dumps(default_settings, indent=4))  # Write JSON
+        print(f"Created default settings file at {SETTINGS_FILE}")
+    except Exception as e:
+        print(f"Error creating settings file: {e}")
+
+def load_settings():
+    """Loads rewind and sleep settings from the JSON file. Creates the file if missing."""
+    if not SETTINGS_FILE.exists():
+        create_default_settings()
+
+    # Default values
+    rewind_time = DEFAULT_REWIND_TIME
+    update_interval = DEFAULT_UPDATE_INTERVAL
+
+    try:
+        settings = json.loads(SETTINGS_FILE.read_text())  # Read JSON
+
+        # Validate and apply settings
+        rewind_time = int(settings.get("rewind_time_seconds", rewind_time))
+        sleep_time = int(settings.get("update_interval_seconds", update_interval))
+
+        print(f"Loaded settings: Rewind {rewind_time}s, Update Interval {update_interval}s")
+
+    except (json.JSONDecodeError, ValueError, TypeError) as e:
+        print(f"Warning: Failed to load settings.json ({e}). Using defaults.")
+
+    return rewind_time, update_interval
+
+# Ensure settings file exists & load settings
+REWIND_TIME, UPDATE_INTERVAL = load_settings()

@@ -246,7 +246,7 @@ while True:
     if audioPlayer.is_playing and is_playing:
         
         # Only save state every 1 second to avoid unnecessary writes
-        if time.time() - last_position_update >= config.PROGRESS_UPDATE_INTERVAL:
+        if time.time() - last_position_update >= config.UPDATE_INTERVAL:
             save_position()
             last_position_update = time.time()
 

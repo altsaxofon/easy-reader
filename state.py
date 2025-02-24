@@ -1,6 +1,7 @@
 #todo make chapter and position ino setters and getters @properties
 
 import json
+import traceback
 from pathlib import Path
 import config
 from books import books
@@ -67,9 +68,22 @@ class State:
         self.save_state()
 
     def save_state(self):
-        """Saves the state to the JSON file."""
-        with self.state_file.open("w") as f:
-            json.dump(self.state, f, indent=4)
+        """Saves the state to the JSON file, with explicit error handling."""
+        try:
+            with self.state_file.open("w") as f:
+                json.dump(self.state, f, indent=4)
+            print(f"State saved successfully to {self.state_file}")
+        except PermissionError:
+            print(f"Error: Permission denied when trying to write to {self.state_file}")
+        except FileNotFoundError:
+            print(f"Error: The file {self.state_file} was not found. Check if the path is correct.")
+        except IsADirectoryError:
+            print(f"Error: {self.state_file} is a directory, not a file.")
+        except json.JSONDecodeError:
+            print("Error: Failed to serialize state data to JSON. Check for invalid data.")
+        except Exception as e:
+            print(f"Unexpected error while saving state: {e}")
+            traceback.print_exc()
 
     @property
     def position(self):
