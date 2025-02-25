@@ -48,7 +48,8 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 ### Wiring diagram
 
-![wiring](https://github.com/user-attachments/assets/e9837eb8-c2be-41e9-ae5c-0bdf428fd56c)
+![Artboard 1@4x](https://github.com/user-attachments/assets/e9e4d85e-1d8d-4b62-9bac-3ec25f64fa88)
+
 > [!NOTE]
 > Note that the led is connected via a 330Ω resistor.
 
