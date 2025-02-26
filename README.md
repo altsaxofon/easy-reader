@@ -22,8 +22,7 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 ## Hardware
 
-
-<img width="1207" alt="easy reader" src="https://github.com/user-attachments/assets/67183cfc-b18c-42fb-b401-af1854f33c87" />
+<img width="1118" alt="Skärmavbild 2025-02-26 kl  14 51 57" src="https://github.com/user-attachments/assets/2e0d5c11-d27c-43d9-9406-96dbd7e7c80c" />
 
 ### Parts list
 
