@@ -71,10 +71,11 @@ This is how i connected my components to the Raspberry Pi Zero.
 | Previous button     | GPIO**22**      |
 | Rocker switch     | GPIO**23**      |
 
-The pin numbers are defined in `config.py`, change them if you want to use other pins.
-<br />
+
 Connecting both the PI and the amplifier to the USB-C power board caused a really bad noise. Altough the cuase is probably some bad connection / soldering from my end, the ground loop isolator solved the issue.
-<br />
+<br /><br />
+The pin numbers are defined in `config.py`, change them if you want to use other pins.
+<br /><br />
 
 ## Software
 ### How to use
