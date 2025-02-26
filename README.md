@@ -228,26 +228,3 @@ journalctl -u easy_reader.service -b
 
 
 
-
-### Todo
-**PI**
-- [ ] create and partition SD card
-- [ ] set up SSH
-- [ ] set up filesharing
-- [ ] test software
-- [ ] setup autostart
-
-**Software**
-- [ ] clean code
-- [x] remove 'duration' from JSON?
-- [x] create a list of requirements.txt
-- [x] create install?
-  
-**Hardware**
-- [ ] set up audio
-- [ ] cardboard prototype
-
-**Documentation**
-- [ ] fritizing
-
-
