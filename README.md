@@ -71,6 +71,8 @@ The pin numbers are defined in `main.py`, change them if you want to use other p
 *The prototype was made on a breadboard*
 
 
+![Uploading Skärmavbild 2025-02-26 kl. 14.22.36.png…]()
+
 ## Software
 ### How to use
 #### Managing books
