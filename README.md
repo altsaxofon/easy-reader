@@ -22,10 +22,10 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 ## Hardware
 
-### Parts list
 
 <img width="1207" alt="easy reader" src="https://github.com/user-attachments/assets/67183cfc-b18c-42fb-b401-af1854f33c87" />
 
+### Parts list
 
 | **Category**      | **Item**                                                                                                      | **Source**                                                                                                  | **Price** |
 |--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|-----------|
@@ -67,8 +67,6 @@ This is how i connected my components to the Raspberry Pi Zero.
 
 The pin numbers are defined in `main.py`, change them if you want to use other pins.
 <br /><br />
-![prototype](https://github.com/user-attachments/assets/b171bdb6-079a-4f85-ac63-0a990ff16ab5)
-*The prototype was made on a breadboard*
 
 ## Software
 ### How to use
