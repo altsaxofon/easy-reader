@@ -107,6 +107,9 @@ Changing books will not reset book progress. The progress  will be reset when a 
 #### Speech synthesis
 The easy reader gives spoken feedback text to speech engine when the interface is used. The speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
 
+#### Changing settings
+The easy reader gives spoken feedback text to speech engine when the interface is used. The speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
+
 
 ## How to setup
 ### 1. Create the SD Card
