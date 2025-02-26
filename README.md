@@ -27,23 +27,22 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 ### Parts list
 
-| **Category**      | **Item**                                                                                                      | **Source**                                                                                                  | **Price** |
-|--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|-----------|
-| **Raspberry Pi Zero** | Raspberry Pi Zero   | [Electrokit](https://www.electrokit.com/raspberry-pi-zero-2-wh-med-header)         | TBD       |
-|                    | Pi Zero kit with enclosure and accessories     | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)    | TBD       |
-|                    | Micro SD with SD adapter   | [Aliexpress](https://www.aliexpress.com/item/1005007182352564.html) |    TBD       |                 
-|                    | micro SD to SD extension cable   | [Amazon](https://www.amazon.se/dp/B0C4L7DDZF)  | TBD       |
-| **Audio Playback** | USB audio card                                                                                              | [Amazon](https://www.amazon.se/dp/B00IRVQ0F8)                                                              | TBD       |
-|                    | USB-A to Micro USB adapter (Part of Pi Zero kit)                                                             | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)                                                                                                       | TBD       |
-|                    | Amplifier board       | Computer speakers from goodwill                                            | TBD       |
-|                    | Small 5V amplifier  | [Ali express](https://www.aliexpress.com/item/1005005852252380.html)     | TBD       |
-|                    | 3,5mm cable / plug                 | Goodwill                   | TBD       |
-|                    | 2x 3W 4ohm speakers  | [A-Z parts](https://www.az-delivery.de/en/products/2-stuck-dfplayer-mini-3-watt-8-ohm-mini-lautsprecher-mit-jst-ph2-0-mm-pin-schnittstelle-fur-arduino-raspberry-pi-und-elektronische-diy-projekte-inklusive-e-book)        | TBD       |
-|                    | 2x  speakers  |   Computer speakers from goodwill     | TBD       |
-| **UI**             | 2x Smaller momentary push buttons                                                                            | [Electrokit](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)                                    | TBD       |
-|                    | 1x Big LED-illuminated arcade-style button                                                                   | [Aliexpress](https://www.aliexpress.com/item/1005007297493475.html)                                            | TBD       |
-|                    | Rocker switch On-On 2-position                                                                              | [Electrokit](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | TBD       |
-| **Power supply**   | USB-PD Power supply board 5-20V                                                                            | [Electrokit](https://www.electrokit.com/en/usb-pd-stromforsorjningskort-5-20v)                                    | TBD       |
+| **Category**      | **Item**                | **Source**                      | 
+|--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| **Raspberry Pi Zero** | Raspberry Pi Zero   | [Electrokit](https://www.electrokit.com/raspberry-pi-zero-2-wh-med-header)         | 
+|                    | Pi Zero kit with enclosure and accessories     | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)    | 
+|                    | Micro SD with SD adapter   | [Aliexpress](https://www.aliexpress.com/item/1005007182352564.html) |                
+|                    | micro SD to SD extension cable   | [Amazon](https://www.amazon.se/dp/B0C4L7DDZF)  | 
+| **Audio Playback** | USB audio card            | [Amazon](https://www.amazon.se/dp/B00IRVQ0F8)         |
+|                    | USB-A to Micro USB adapter (Part of Pi Zero kit)             | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)         | 
+|                    | Amplifier board       | Computer speakers from goodwill                                            | 
+|                    | 3,5mm cable / plug                 | Goodwill                   |
+|                    | 2x  speakers  |   Computer speakers from goodwill     | 
+|                    | Ground loop isolator  |   [Amazon](https://www.amazon.se/dp/B0CSDKGQQP)     |
+| **UI**             | 2x Smaller momentary push buttons          | [Electrokit](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)                                    | 
+|                    | 1x Big LED-illuminated arcade-style button                | [Aliexpress](https://www.aliexpress.com/item/1005007297493475.html)                                            |
+|                    | Rocker switch On-On 2-position              | [Electrokit](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | 
+| **Power supply**   | USB-PD Power supply board 5-20V              | [Electrokit](https://www.electrokit.com/en/usb-pd-stromforsorjningskort-5-20v)                                    | 
 
 
 <br /><br />
