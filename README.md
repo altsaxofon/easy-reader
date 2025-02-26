@@ -44,8 +44,6 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 
 <br /><br />
-![prototype](https://github.com/user-attachments/assets/9adc1834-1058-40e7-9b24-875f103884a1)
-
 
 <img width="1060" alt="Skärmavbild 2025-02-26 kl  14 22 36" src="https://github.com/user-attachments/assets/edfd6852-2872-47d9-a2da-feba35c3ae06" />
 
@@ -70,9 +68,6 @@ The pin numbers are defined in `main.py`, change them if you want to use other p
 <br /><br />
 ![prototype](https://github.com/user-attachments/assets/b171bdb6-079a-4f85-ac63-0a990ff16ab5)
 *The prototype was made on a breadboard*
-
-
-![Uploading Skärmavbild 2025-02-26 kl. 14.22.36.png…]()
 
 ## Software
 ### How to use
