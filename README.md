@@ -1,5 +1,8 @@
 # Easy reader
 
+<img width="1044" alt="Skärmavbild 2025-02-26 kl  14 12 57" src="https://github.com/user-attachments/assets/098197a8-0b2f-4b97-86ad-b2c8111311a1" />
+
+
 An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
 
 The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or that in any other way have a hard time interacting with touch screens. In this case, my grandmother in-law. 
