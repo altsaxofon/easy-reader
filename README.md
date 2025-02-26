@@ -24,6 +24,9 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 ### Parts list
 
+<img width="1207" alt="easy reader" src="https://github.com/user-attachments/assets/67183cfc-b18c-42fb-b401-af1854f33c87" />
+
+
 | **Category**      | **Item**                                                                                                      | **Source**                                                                                                  | **Price** |
 |--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|-----------|
 | **Raspberry Pi Zero** | Raspberry Pi Zero   | [Electrokit](https://www.electrokit.com/raspberry-pi-zero-2-wh-med-header)         | TBD       |
@@ -44,7 +47,6 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 
 <br /><br />
-<img width="1207" alt="easy reader" src="https://github.com/user-attachments/assets/67183cfc-b18c-42fb-b401-af1854f33c87" />
 
 
 ### Wiring diagram
