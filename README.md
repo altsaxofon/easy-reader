@@ -2,6 +2,13 @@
 
 <img width="1044" alt="Skärmavbild 2025-02-26 kl  14 12 57" src="https://github.com/user-attachments/assets/098197a8-0b2f-4b97-86ad-b2c8111311a1" />
 
+## Table of Contents  
+
+1. [Introduction](#easy-reader)  
+2. [Hardware](#hardware)  
+3. [Software](#software)  
+4. [How to Set Up](#how-to-setup)  
+5. [Troubleshooting](#not-working)  
 
 An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
 
