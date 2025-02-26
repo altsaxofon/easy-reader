@@ -44,8 +44,7 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 
 
 <br /><br />
-
-<img width="1060" alt="Skärmavbild 2025-02-26 kl  14 22 36" src="https://github.com/user-attachments/assets/edfd6852-2872-47d9-a2da-feba35c3ae06" />
+<img width="1207" alt="easy reader" src="https://github.com/user-attachments/assets/67183cfc-b18c-42fb-b401-af1854f33c87" />
 
 
 ### Wiring diagram
