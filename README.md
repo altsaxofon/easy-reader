@@ -171,10 +171,6 @@ It will auto run when the pi is booted.
 > [!NOTE]
 >The first time the easyreader boots it will generate wav files for the speech synthesis, and this might take som time (10+ minutes)
 
-### 3. Configure Easyreader
-
-
-
 ### Not working?
 
 #### Look at the logs from easy_reader.service
@@ -212,10 +208,19 @@ Run Easy reader (`main.py`)
 *assuming `pi`is the username*
 
 
+### 3. Configure Easyreader
 
-## Software
 
+### Architecture
 
+The software is made up of a main script `main.py` and 6 modules with different responsibilites
+
+**config.py** for loading and managing settings
+**books.py** for managing the book library
+**hardware.py** for communicating with buttons, switches and leds
+**player.py** for controlling audio playback
+**speech.py** for managing speech synthesis
+**state.py** for loading and saving listening progress
 
 Then open the easy_reader.service:
 """
