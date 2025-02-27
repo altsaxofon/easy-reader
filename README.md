@@ -18,7 +18,7 @@ The Easy Reader plays audiobooks in mp3 format from an SD card and is operated w
 
 The reader can handle any number of books and will read them one after the other, pausing in between.
 
-On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate.
+On the right side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate.
 
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
 
@@ -85,11 +85,9 @@ The pin numbers are defined in `config.py`, change them if you want to use other
 #### Listening
 The reader is powered on by connecting a usb-c cable to the outlet in the back (6). takes about 30 seconds to to power on. The button will blink three times to indicate that the player is ready for playback. 
 
-Pushing the play / pause button (1) will play or pause the playback of the audiobook. When playback resumes the player rewinds a couple of seconds for a small recap.
+Pushing the play / pause button (1) will play or pause the playback of the audiobook. When playback resumes the player rewinds a couple of seconds for a small recap. The volume is adjusted with the volume knob (2).
 
-The progress is coninously saved to a text file on the SD card of the player.
-
-When an audiobook is finished the progress of the book will be reset and the playback will stop. The player will tell the user to push the play button to start to listen to the next book.  
+The progress is coninously saved to a text file on the SD card of the player. When an audiobook is finished the progress of the book will be reset and the playback will stop. The player will tell the user to push the play button to start to listen to the next book.  
 
 #### Changing book or chapter
 Using the book/chapter switch or a directional button will pause the music and set the player in "settings mode".
