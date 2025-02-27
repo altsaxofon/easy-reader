@@ -78,11 +78,9 @@ The pin numbers are defined in `config.py`, change them if you want to use other
 <br /><br />
 
 ## Software
-### How to use
-#### Managing books
-All audiobooks are stored in the directory /audiobooks/ on the Fat32 partition of the SD card that is accesible form mac / windows. Each book is a folder of MP3-files (prefereably one mp3 file per chapter of the book). The player uses the folder names to identify the books using the format `Author - Book Title`
+<img width="1416" alt="Skärmavbild 2025-02-27 kl  17 22 11" src="https://github.com/user-attachments/assets/45e909e5-fb26-4792-bc41-c573092b3cff" />
 
-The player stores a list of books and listening progress in a json encoded txt file on the SD card. The player will scan the /audiobooks/ directory and add or remove books from the registry to reflect any changes in the folder. To add or remove a book, just add or remove a folder in the SD-card. 
+### How to use
 
 #### Listening
 The reader takes about 30 seconds to to power on. The button will blink three times to indicate 
@@ -104,10 +102,15 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
+#### Managing books
+All audiobooks are stored in the directory /audiobooks/ on the Fat32 partition of the SD card that is accesible form mac / windows. Each book is a folder of MP3-files (prefereably one mp3 file per chapter of the book). The player uses the folder names to identify the books using the format `Author - Book Title`
+
+The player stores a list of books and listening progress in a json encoded txt file on the SD card. The player will scan the /audiobooks/ directory and add or remove books from the registry to reflect any changes in the folder. To add or remove a book, just add or remove a folder in the SD-card. 
+
 #### Speech synthesis
 The easy reader gives spoken feedback text to speech engine when the interface is used. The speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
 
-#### Changing settings
+### Changing settings
 The easy reader gives spoken feedback text to speech engine when the interface is used. The speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
 
 
