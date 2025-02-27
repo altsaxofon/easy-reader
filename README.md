@@ -83,17 +83,17 @@ The pin numbers are defined in `config.py`, change them if you want to use other
 ### How to use
 
 #### Listening
-The reader takes about 30 seconds to to power on. The button will blink three times to indicate 
+The reader is powered on by connecting a usb-c cable to the outlet in the back (6). takes about 30 seconds to to power on. The button will blink three times to indicate that the player is ready for playback. 
 
-that it is ready for playback. 
-Pushing the play / pause button will play or pause the playback of the audiobook. When playback resumes the player rewinds 15 seconds for a small recap. The number of esonds can be changed in `main.py`
+Pushing the play / pause button (1) will play or pause the playback of the audiobook. When playback resumes the player rewinds a couple of seconds for a small recap.
 
-During playback the progress will be coninuasly saved to a text file on the SD card of the player.
+The progress is coninously saved to a text file on the SD card of the player.
 
-When an audiobook is finished the progress of the book will be reset and the playback will stop. The speech synthesis will inform the user to push the play button to begin to listen to the next book.  
+When an audiobook is finished the progress of the book will be reset and the playback will stop. The player will tell the user to push the play button to start to listen to the next book.  
 
 #### Changing book or chapter
 Using the book/chapter switch or a directional button will pause the music and set the player in "settings mode".
+
 Depending on the state of the book/chapter switch the current book title or chapter will be read out loud by the speech synthesis. 
 
 While in settings mode, using the arrow buttons will change book title or chapter. This change will immedatly be stored to the memory and the selection will be read out load by the speech synthesis.
