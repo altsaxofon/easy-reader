@@ -10,7 +10,7 @@
 4. [How to Set Up](#how-to-setup)  
 5. [Troubleshooting](#not-working)  
 
-An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
+An easy to use audio book player for the elderly, runnin in python on Raspberry Pi Zero 2W.
 
 The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or that in any other way have a hard time interacting with touch screens. In this case, my grandmother in-law. 
 
