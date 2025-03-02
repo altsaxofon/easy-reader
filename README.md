@@ -172,6 +172,9 @@ It will auto run when the pi is booted.
 
 > [!NOTE]
 >The first time the easyreader boots it will generate wav files for the speech synthesis, and this might take som time (10+ minutes)
+> [!NOTE]
+> The easyreader must be connected to WiFi to download the TTS model. After this, the reader can generate speech (e.g. when adding a new book) without connection to the internet. 
+
 
 ### Not working?
 
