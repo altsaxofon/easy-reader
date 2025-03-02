@@ -1,6 +1,8 @@
 # Easy reader
 
-<img width="1044" alt="Skärmavbild 2025-02-26 kl  14 12 57" src="https://github.com/user-attachments/assets/098197a8-0b2f-4b97-86ad-b2c8111311a1" />
+![20250302_102227](https://github.com/user-attachments/assets/770da33f-65cc-49b8-90fc-4f747a1ec16d)
+
+
 
 ## Table of Contents  
 
