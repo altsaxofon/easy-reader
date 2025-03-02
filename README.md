@@ -4,13 +4,6 @@
 
 
 
-## Table of Contents  
-
-1. [Introduction](#easy-reader)  
-2. [Hardware](#hardware)  
-3. [Software](#software)  
-4. [How to Set Up](#how-to-setup)  
-5. [Troubleshooting](#not-working)  
 
 An easy to use audio book player for the elderly, runnin in python on Raspberry Pi Zero 2W.
 
@@ -28,6 +21,13 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 > I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
 > Use common sense and follow at your own risk. Happy building!
 
+## Table of Contents  
+
+1. [Introduction](#easy-reader)  
+2. [Hardware](#hardware)  
+3. [Software](#software)  
+4. [How to Set Up](#how-to-setup)  
+5. [Troubleshooting](#not-working)  
 
 ## Hardware
 
