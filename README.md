@@ -81,6 +81,8 @@ The pin numbers are defined in `config.py`, change them if you want to use other
 
 ## The build
 
+![the build](https://github.com/user-attachments/assets/7cf9db79-9f3b-404c-945b-a5ab0253881d)
+
 
 ## Software
 <img width="1416" alt="Skärmavbild 2025-02-27 kl  17 22 11" src="https://github.com/user-attachments/assets/45e909e5-fb26-4792-bc41-c573092b3cff" />
