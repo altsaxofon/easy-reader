@@ -40,7 +40,7 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 |--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | **Raspberry Pi Zero** | Raspberry Pi Zero   | [Electrokit](https://www.electrokit.com/raspberry-pi-zero-2-wh-med-header)         | 
 |                    | Pi Zero kit with enclosure and accessories     | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)    | 
-|                    | Micro SD with SD adapter   | [Aliexpress](https://www.aliexpress.com/item/1005007182352564.html) |                
+|                    | 32Gb Micro SD with SD adapter   | Local store |                
 |                    | micro SD to SD extension cable   | [Amazon](https://www.amazon.se/dp/B0C4L7DDZF)  | 
 | **Audio Playback** | USB audio card            | [Amazon](https://www.amazon.se/dp/B00IRVQ0F8)         |
 |                    | USB-A to Micro USB adapter (Part of Pi Zero kit)             | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)         | 
