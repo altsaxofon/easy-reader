@@ -7,14 +7,36 @@ import json
 DEFAULT_REWIND_TIME = 10  # The amount of seconds the player will rewind / recap on play
 DEFAULT_UPDATE_INTERVAL = 10  # Interval to update progress in seconds
 
-TTS_MODEL = "sv_SE-nst-medium" # TTS voice model
+# Text to speech
+
+TTS_MODEL = "sv_SE-nst-medium" # TTS voice model, Swedish
+
+# Remove the line above and uncomment the one below to use an english voice model,or find other languages/models at https://rhasspy.github.io/piper-samples/
+# TTS_MODEL = "en_GB-alba-medium" 
+
+# Phrases for the speak synthesis in swedish
 PHRASES = {
     "choose_book": "Välj bok",
     "choose_chapter": "Välj del",
     "chapter": "Del",
     "by": "av",
-    "the_end_of_book" : "Boken är slut, tryck på knappen för att påbörja nästa bok"
+    "the_end_of_book" : "Boken är slut, tryck på knappen för att påbörja nästa bok",
+    "player_ready" : "Tryck på knappen för att påbörja uppläsningen"
+
 }
+
+# Remove the PHRASES above and uncomment the ones below for english, or translate to another language
+
+"""
+PHRASES = {
+    "choose_book": Select book",
+    "choose_chapter": "Select chapter",
+    "chapter": "Chapter",
+    "by": "by",
+    "the_end_of_book" : "The book is finished, press the button to start the next book.",
+    "player_ready" : "Press the button to start the reading."
+}
+"""
 
 # Base directories
 HOME_DIR = Path(__file__).resolve().parent.parent

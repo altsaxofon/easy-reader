@@ -8,10 +8,14 @@
 __author__ = "Erik Arnell"
 
 import time
-
 import config
-
 from hardware import Hardware
+
+# Import modules 
+from books import books
+from state import state
+from player import audioPlayer
+from speech import speech
 
 # Initialize hardware
 
@@ -41,12 +45,6 @@ callbacks = {
 
 # Initialize hardware
 hardware = Hardware(callbacks)
-
-# Import modules 
-from books import books
-from state import state
-from player import audioPlayer
-from speech import speech
 
 # Connect hardware callbacks
 speech.register_blink_callback(hardware.blink_led)
@@ -229,6 +227,10 @@ print("Starting Easy Reader")
 
 # Pre generate speech (this may take some time the first boot)
 speech.pre_generate_tts()
+
+# Announce that the player is ready via TTS
+speech.speak(config.PHRASES["player_ready"])
+
 
 # Blink led to indicate easyereader is operational
 hardware.blink_led(3)
