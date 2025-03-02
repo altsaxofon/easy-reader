@@ -29,7 +29,7 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 4. [How to Set Up](#how-to-setup)  
 5. [Troubleshooting](#not-working)  
 
-## Hardware
+## Circuit
 
 <img width="1052" alt="Skärmavbild 2025-02-26 kl  14 57 40" src="https://github.com/user-attachments/assets/d924b353-8c2b-49ee-afe0-1c46608ea232" />
 
@@ -78,6 +78,9 @@ Connecting both the PI and the amplifier to the USB-C power board caused a reall
 <br /><br />
 The pin numbers are defined in `config.py`, change them if you want to use other pins.
 <br /><br />
+
+## The build
+
 
 ## Software
 <img width="1416" alt="Skärmavbild 2025-02-27 kl  17 22 11" src="https://github.com/user-attachments/assets/45e909e5-fb26-4792-bc41-c573092b3cff" />
