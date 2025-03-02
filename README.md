@@ -1,6 +1,11 @@
 # Easy reader
 
-An easy to use audio book player for the elderly, made in python to run on a Raspberry Pi.
+![20250302_102227](https://github.com/user-attachments/assets/15893e17-84b6-4ef4-9b7f-e4d2df7436cc)
+
+
+
+
+An easy to use audio book player for the elderly, runnin in python on Raspberry Pi Zero 2W.
 
 The goal of this project is to create a simple audiobook reader for users with impared vision, low mobility or that in any other way have a hard time interacting with touch screens. In this case, my grandmother in-law. 
 
@@ -8,7 +13,7 @@ The Easy Reader plays audiobooks in mp3 format from an SD card and is operated w
 
 The reader can handle any number of books and will read them one after the other, pausing in between.
 
-On the side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate.
+On the right side of the reader there is an interface made of a switch and two directional buttons. This is interface is not needed to operate the player, but make it possible to select between books and chapters. The swich is used to choose between book and chapter, and the directional buttons are used to navigate.
 
 The reader uses a simple text to speech engine to helop the user navigate between books and chapters.
 
@@ -16,36 +21,46 @@ The reader uses a simple text to speech engine to helop the user navigate betwee
 > I am no electronics expert, and many parts of the code was made with the help of Chat GPT <br />
 > Use common sense and follow at your own risk. Happy building!
 
+## Table of Contents  
 
-## Hardware
+1. [Introduction](#easy-reader)  
+2. [Hardware](#hardware)  
+3. [Software](#software)  
+4. [How to Set Up](#how-to-setup)  
+5. [Troubleshooting](#not-working)  
+
+## Circuit
+
+<img width="1052" alt="Skärmavbild 2025-02-26 kl  14 57 40" src="https://github.com/user-attachments/assets/d924b353-8c2b-49ee-afe0-1c46608ea232" />
+
 
 ### Parts list
 
-| **Category**      | **Item**                                                                                                      | **Link**                                                                                                  | **Price** |
-|--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|-----------|
-| **Raspberry Pi Zero** | Raspberry Pi Zero   | [Electrokit](https://www.electrokit.com/raspberry-pi-zero-2-wh-med-header)         | TBD       |
-|                    | Pi Zero kit with enclosure and accessories     | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)    | TBD       |
-|                    | Micro SD with SD adapter   | [Aliexpress](https://www.aliexpress.com/item/1005007182352564.html) |    TBD       |                 
-|                    | micro SD to SD extension cable   | [Amazon](https://www.amazon.se/dp/B0C4L7DDZF)  | TBD       |
-| **Audio Playback** | USB audio card                                                                                              | [Amazon](https://www.amazon.se/dp/B00IRVQ0F8)                                                              | TBD       |
-|                    | USB-A to Micro USB adapter (Part of Pi Zero kit)                                                             | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)                                                                                                       | TBD       |
-|                    | Small 5V amplifier                                                                                          | [Ali express](https://www.aliexpress.com/item/1005005852252380.html)                                            | TBD       |
-|                    | 3,5mm cable / plug                 | [A-Z parts]                      | TBD       |
-|                    | 2x 3W 4ohm speakers  | [A-Z parts](https://www.az-delivery.de/en/products/2-stuck-dfplayer-mini-3-watt-8-ohm-mini-lautsprecher-mit-jst-ph2-0-mm-pin-schnittstelle-fur-arduino-raspberry-pi-und-elektronische-diy-projekte-inklusive-e-book)        | TBD       |
-| **UI**            | 2x Smaller momentary push buttons                                                                            | [Electrokit](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)                                    | TBD       |
-|                    | 1x Big LED-illuminated arcade-style button                                                                   | [Aliexpress](https://www.aliexpress.com/item/1005007297493475.html)                                            | TBD       |
-|                    | Rocker switch On-On 2-position                                                                              | [Electrokit](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | TBD       |
+| **Category**      | **Item**                | **Source**                      | 
+|--------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| **Raspberry Pi Zero** | Raspberry Pi Zero   | [Electrokit](https://www.electrokit.com/raspberry-pi-zero-2-wh-med-header)         | 
+|                    | Pi Zero kit with enclosure and accessories     | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)    | 
+|                    | Micro SD with SD adapter   | [Aliexpress](https://www.aliexpress.com/item/1005007182352564.html) |                
+|                    | micro SD to SD extension cable   | [Amazon](https://www.amazon.se/dp/B0C4L7DDZF)  | 
+| **Audio Playback** | USB audio card            | [Amazon](https://www.amazon.se/dp/B00IRVQ0F8)         |
+|                    | USB-A to Micro USB adapter (Part of Pi Zero kit)             | [Amazon](https://www.amazon.se/dp/B0BJ1WFGMN)         | 
+|                    | Amplifier board       | Computer speakers from goodwill                                            | 
+|                    | 3,5mm cable / plug                 | Goodwill                   |
+|                    | 2x  speakers  |   Computer speakers from goodwill     | 
+|                    | Ground loop isolator  |   [Amazon](https://www.amazon.se/dp/B0CSDKGQQP)     |
+| **UI**             | 2x Smaller momentary push buttons          | [Electrokit](https://www.electrokit.com/en/tryckknapp-15mm-1-pol-off-onvit)                                    | 
+|                    | 1x Big LED-illuminated arcade-style button                | [Aliexpress](https://www.aliexpress.com/item/1005007297493475.html)                                            |
+|                    | Rocker switch On-On 2-position              | [Electrokit](https://www.electrokit.com/en/vagomkopplare-2-pol-on-on-1)                                        | 
+| **Power supply**   | USB-PD Power supply board 5-20V              | [Electrokit](https://www.electrokit.com/en/usb-pd-stromforsorjningskort-5-20v)                                    | 
 
 
 <br /><br />
-![prototype](https://github.com/user-attachments/assets/9adc1834-1058-40e7-9b24-875f103884a1)
-
-
 
 
 ### Wiring diagram
 
-![wiring](https://github.com/user-attachments/assets/e9837eb8-c2be-41e9-ae5c-0bdf428fd56c)
+![Artboard 1@4x](https://github.com/user-attachments/assets/e9e4d85e-1d8d-4b62-9bac-3ec25f64fa88)
+
 > [!NOTE]
 > Note that the led is connected via a 330Ω resistor.
 
@@ -58,31 +73,32 @@ This is how i connected my components to the Raspberry Pi Zero.
 | Previous button     | GPIO**22**      |
 | Rocker switch     | GPIO**23**      |
 
-The pin numbers are defined in `main.py`, change them if you want to use other pins.
+
+Connecting both the PI and the amplifier to the USB-C power board caused a really bad noise. Altough the cuase is probably some bad connection / soldering from my end, the ground loop isolator solved the issue.
 <br /><br />
-![prototype](https://github.com/user-attachments/assets/b171bdb6-079a-4f85-ac63-0a990ff16ab5)
-*The prototype was made on a breadboard*
+The pin numbers are defined in `config.py`, change them if you want to use other pins.
+<br /><br />
+
+## The build
+
+![the build](https://github.com/user-attachments/assets/7cf9db79-9f3b-404c-945b-a5ab0253881d)
 
 
 ## Software
-### How to use
-#### Managing books
-All audiobooks are stored in the directory /audiobooks/ on the Fat32 partition of the SD card that is accesible form mac / windows. Each book is a folder of MP3-files (prefereably one mp3 file per chapter of the book). The player uses the folder names to identify the books using the format `Author - Book Title`
+<img width="1416" alt="Skärmavbild 2025-02-27 kl  17 22 11" src="https://github.com/user-attachments/assets/45e909e5-fb26-4792-bc41-c573092b3cff" />
 
-The player stores a list of books and listening progress in a json encoded txt file on the SD card. The player will scan the /audiobooks/ directory and add or remove books from the registry to reflect any changes in the folder. To add or remove a book, just add or remove a folder in the SD-card. 
+### How to use
 
 #### Listening
-The reader takes about 30 seconds to to power on. The button will blink three times to indicate 
+The reader is powered on by connecting a usb-c cable to the outlet in the back (6). takes about 30 seconds to to power on. The button will blink three times to indicate that the player is ready for playback. 
 
-that it is ready for playback. 
-Pushing the play / pause button will play or pause the playback of the audiobook. When playback resumes the player rewinds 15 seconds for a small recap. The number of esonds can be changed in `main.py`
+Pushing the play / pause button (1) will play or pause the playback of the audiobook. When playback resumes the player rewinds a couple of seconds for a small recap. The volume is adjusted with the volume knob (2).
 
-During playback the progress will be coninuasly saved to a text file on the SD card of the player.
-
-When an audiobook is finished the progress of the book will be reset and the playback will stop. The speech synthesis will inform the user to push the play button to begin to listen to the next book.  
+The progress is coninously saved to a text file on the SD card of the player. When an audiobook is finished the progress of the book will be reset and the playback will stop. The player will tell the user to push the play button to start to listen to the next book.  
 
 #### Changing book or chapter
 Using the book/chapter switch or a directional button will pause the music and set the player in "settings mode".
+
 Depending on the state of the book/chapter switch the current book title or chapter will be read out loud by the speech synthesis. 
 
 While in settings mode, using the arrow buttons will change book title or chapter. This change will immedatly be stored to the memory and the selection will be read out load by the speech synthesis.
@@ -91,7 +107,15 @@ Settings mode is exited by pushing the play button, wich resumes playback from t
 
 Changing books will not reset book progress. The progress  will be reset when a book finnishes, or can be done manually by using the directional buttons.
 
+#### Managing books
+All audiobooks are stored in the directory /audiobooks/ on the Fat32 partition of the SD card that is accesible form mac / windows. Each book is a folder of MP3-files (prefereably one mp3 file per chapter of the book). The player uses the folder names to identify the books using the format `Author - Book Title`
+
+The player stores a list of books and listening progress in a json encoded txt file on the SD card. The player will scan the /audiobooks/ directory and add or remove books from the registry to reflect any changes in the folder. To add or remove a book, just add or remove a folder in the SD-card. 
+
 #### Speech synthesis
+The easy reader gives spoken feedback text to speech engine when the interface is used. The speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
+
+### Changing settings
 The easy reader gives spoken feedback text to speech engine when the interface is used. The speech is pre generated and is stored on the PI partition as wav files. The first time the player is turned on it will generate the neccecary files, and this might take some time (10+ minutes). When a new book is added to the `audiobooks` folder a wav file for the book title will be generated, wich also will take a little time. Playback is disabled during the speech generation and the big button will light up as an indication. 
 
 
@@ -151,10 +175,15 @@ chmod +x setup.sh
 The setup script creates a service that mounts the fat32 partition and loads the easy_reader python script in it's virtual environment. 
 It will auto run when the pi is booted. 
 
+#### Translate
+
+The easy reader is configured to speak swedish. You can change language by changing the settings in the `config.py`file.
+Change model, Translate phrases. 
+
 > [!NOTE]
 >The first time the easyreader boots it will generate wav files for the speech synthesis, and this might take som time (10+ minutes)
-
-### 3. Configure Easyreader
+> [!NOTE]
+> The easyreader must be connected to WiFi to download the TTS model. After this, the reader can generate speech (e.g. when adding a new book) without connection to the internet. 
 
 
 
@@ -195,10 +224,19 @@ Run Easy reader (`main.py`)
 *assuming `pi`is the username*
 
 
+### 3. Configure Easyreader
 
-## Software
 
+### Architecture
 
+The software is made up of a main script `main.py` and 6 modules with different responsibilites
+
+**config.py** for loading and managing settings
+**books.py** for managing the book library
+**hardware.py** for communicating with buttons, switches and leds
+**player.py** for controlling audio playback
+**speech.py** for managing speech synthesis
+**state.py** for loading and saving listening progress
 
 Then open the easy_reader.service:
 """
@@ -223,28 +261,5 @@ journalctl -u easy_reader.service -b
 #### Add books
 
 
-
-
-
-### Todo
-**PI**
-- [ ] create and partition SD card
-- [ ] set up SSH
-- [ ] set up filesharing
-- [ ] test software
-- [ ] setup autostart
-
-**Software**
-- [ ] clean code
-- [x] remove 'duration' from JSON?
-- [x] create a list of requirements.txt
-- [x] create install?
-  
-**Hardware**
-- [ ] set up audio
-- [ ] cardboard prototype
-
-**Documentation**
-- [ ] fritizing
 
 
