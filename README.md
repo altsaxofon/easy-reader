@@ -170,10 +170,16 @@ chmod +x setup.sh
 The setup script creates a service that mounts the fat32 partition and loads the easy_reader python script in it's virtual environment. 
 It will auto run when the pi is booted. 
 
+#### Translate
+
+The easy reader is configured to speak swedish. You can change language by changing the settings in the `config.py`file.
+Change model, Translate phrases. 
+
 > [!NOTE]
 >The first time the easyreader boots it will generate wav files for the speech synthesis, and this might take som time (10+ minutes)
 > [!NOTE]
 > The easyreader must be connected to WiFi to download the TTS model. After this, the reader can generate speech (e.g. when adding a new book) without connection to the internet. 
+
 
 
 ### Not working?
