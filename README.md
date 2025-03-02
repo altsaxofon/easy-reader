@@ -1,6 +1,6 @@
 # Easy reader
 
-![20250302_102227](https://github.com/user-attachments/assets/770da33f-65cc-49b8-90fc-4f747a1ec16d)
+![20250302_102227](https://github.com/user-attachments/assets/15893e17-84b6-4ef4-9b7f-e4d2df7436cc)
 
 
 
